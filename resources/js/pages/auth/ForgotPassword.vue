@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 
 defineOptions({ layout: LolAuthLayout });
 
-defineProps<{
-    status?: string;
-}>();
+defineProps({
+    status: { type: String, default: undefined },
+});
 
 const form = useForm({
     email: '',

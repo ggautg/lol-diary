@@ -161,7 +161,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        ...(env('REGISTRATION_ENABLED', false) ? [Features::registration()] : []),
+        Features::resetPasswords(),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

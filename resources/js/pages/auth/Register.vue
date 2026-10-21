@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { ChevronLeft, ChevronRight, Pencil, X } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
@@ -8,41 +8,14 @@ import { csPerMinute, formatDuration, kdaRatio, roleLabel } from '@/lib/lol';
 
 defineOptions({ layout: DiaryLayout });
 
-interface Account {
-    id: number;
-    label: string;
-}
-
-interface Match {
-    id: number;
-    account_id: number;
-    account_label: string;
-    champion: string;
-    role: string | null;
-    win: boolean;
-    kills: number;
-    deaths: number;
-    assists: number;
-    damage_dealt: number;
-    cs: number;
-    duration: number;
-    date: string;
-    time: string;
-    mood: string | null;
-    notes: string | null;
-    lesson: string | null;
-    tags: string[];
-    has_entry: boolean;
-}
-
-const props = defineProps<{
-    month: string;
-    prevMonth: string;
-    nextMonth: string;
-    accounts: Account[];
-    matches: Match[];
-    allTags: string[];
-}>();
+const props = defineProps({
+    month: { type: String, required: true },
+    prevMonth: { type: String, required: true },
+    nextMonth: { type: String, required: true },
+    accounts: { type: Array, required: true },
+    matches: { type: Array, required: true },
+    allTags: { type: Array, default: () => [] },
+});
 
 const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
@@ -54,18 +27,16 @@ const moods = [
     { value: 'tilted', label: 'Tilteado' },
 ];
 
-function moodLabel(value: string | null): string {
+function moodLabel(value) {
     return moods.find((m) => m.value === value)?.label ?? '';
 }
 
 const page = usePage();
-const successMessage = computed(
-    () => (page.props.flash as { success?: string } | undefined)?.success,
-);
+const successMessage = computed(() => page.props.flash?.success);
 
-const selectedAccount = ref<number | null>(null);
-const selectedDate = ref<string | null>(null);
-const detail = ref<HTMLElement | null>(null);
+const selectedAccount = ref(null);
+const selectedDate = ref(null);
+const detail = ref(null);
 
 const filtered = computed(() =>
     props.matches.filter(
@@ -74,19 +45,19 @@ const filtered = computed(() =>
 );
 
 const byDate = computed(() => {
-    const map = new Map<string, Match[]>();
+    const map = new Map();
     for (const match of filtered.value) {
         if (!map.has(match.date)) map.set(match.date, []);
-        map.get(match.date)!.push(match);
+        map.get(match.date).push(match);
     }
     return map;
 });
 
-function dayMatches(date: string): Match[] {
+function dayMatches(date) {
     return byDate.value.get(date) ?? [];
 }
 
-function dayResult(date: string): 'win' | 'loss' | 'mixed' | 'none' {
+function dayResult(date) {
     const list = dayMatches(date);
     if (list.length === 0) return 'none';
     const wins = list.filter((m) => m.win).length;
@@ -94,7 +65,7 @@ function dayResult(date: string): 'win' | 'loss' | 'mixed' | 'none' {
     return wins > losses ? 'win' : losses > wins ? 'loss' : 'mixed';
 }
 
-function dayLabel(cell: { day: number; date: string }): string {
+function dayLabel(cell) {
     const list = dayMatches(cell.date);
     if (list.length === 0) return `Día ${cell.day}: sin partidas`;
     const wins = list.filter((m) => m.win).length;
@@ -114,7 +85,7 @@ const cells = computed(() => {
     const firstWeekday = (new Date(year, month - 1, 1).getDay() + 6) % 7; // Monday = 0
     const daysInMonth = new Date(year, month, 0).getDate();
 
-    const list: ({ day: number; date: string } | null)[] = [];
+    const list = [];
     for (let i = 0; i < firstWeekday; i++) list.push(null);
     for (let day = 1; day <= daysInMonth; day++) {
         list.push({ day, date: `${props.month}-${String(day).padStart(2, '0')}` });
@@ -140,7 +111,7 @@ const selectedMatches = computed(() =>
 const now = new Date();
 const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-function longDate(date: string): string {
+function longDate(date) {
     const [year, month, day] = date.split('-').map(Number);
     const text = new Date(year, month - 1, day).toLocaleDateString('es-PY', {
         weekday: 'long',
@@ -151,22 +122,22 @@ function longDate(date: string): string {
 }
 
 /* ---------- Diary entry form ---------- */
-const editingId = ref<number | null>(null);
+const editingId = ref(null);
 const tagInput = ref('');
 const MAX_TAGS = 10;
 
 const form = useForm({
-    mood: null as string | null,
+    mood: null,
     notes: '',
     lesson: '',
-    tags: [] as string[],
+    tags: [],
 });
 
-function toggleMood(value: string) {
+function toggleMood(value) {
     form.mood = form.mood === value ? null : value;
 }
 
-function addTag(raw: string = tagInput.value) {
+function addTag(raw = tagInput.value) {
     const name = raw.trim().toLowerCase();
     if (name !== '' && !form.tags.includes(name) && form.tags.length < MAX_TAGS) {
         form.tags.push(name);
@@ -174,7 +145,7 @@ function addTag(raw: string = tagInput.value) {
     tagInput.value = '';
 }
 
-function removeTag(name: string) {
+function removeTag(name) {
     form.tags = form.tags.filter((tag) => tag !== name);
 }
 
@@ -182,7 +153,7 @@ const suggestions = computed(() =>
     props.allTags.filter((tag) => !form.tags.includes(tag)).slice(0, 12),
 );
 
-function startEditing(match: Match) {
+function startEditing(match) {
     form.clearErrors();
     form.mood = match.mood;
     form.notes = match.notes ?? '';
@@ -192,7 +163,7 @@ function startEditing(match: Match) {
     editingId.value = match.id;
 }
 
-function saveEntry(match: Match) {
+function saveEntry(match) {
     addTag(); // keep a tag that was typed but never confirmed with Enter
 
     form.put(`/matches/${match.id}/diary-entry`, {

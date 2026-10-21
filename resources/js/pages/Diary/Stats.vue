@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Head, router } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import ChampionIcon from '@/components/ChampionIcon.vue';
@@ -7,47 +7,16 @@ import DiaryLayout from '@/layouts/DiaryLayout.vue';
 
 defineOptions({ layout: DiaryLayout });
 
-interface Rate {
-    games: number;
-    wins: number;
-    losses: number;
-    winrate: number;
-}
-interface ChampionStat extends Rate {
-    champion: string;
-    kda: number;
-    avg_damage: number;
-}
-interface MoodStat extends Rate {
-    mood: string;
-}
-interface HourStat extends Rate {
-    hour: number;
-}
-interface TagStat extends Rate {
-    name: string;
-}
-interface Account {
-    id: number;
-    label: string;
-}
-
-const props = defineProps<{
-    accounts: Account[];
-    selectedAccount: number | null;
-    stats: {
-        overview: Rate;
-        champions: ChampionStat[];
-        moods: MoodStat[];
-        hours: HourStat[];
-        tags: TagStat[];
-    };
-}>();
+const props = defineProps({
+    accounts: { type: Array, required: true },
+    selectedAccount: { type: Number, default: null },
+    stats: { type: Object, required: true },
+});
 
 // Below this many games a percentage is mostly noise
 const MIN_GAMES = 3;
 
-const MOOD_LABELS: Record<string, string> = {
+const MOOD_LABELS = {
     focused: 'Concentrado',
     calm: 'Tranquilo',
     hyped: 'Motivado',
@@ -55,7 +24,7 @@ const MOOD_LABELS: Record<string, string> = {
     tilted: 'Tilteado',
 };
 
-const selected = ref<number | null>(props.selectedAccount);
+const selected = ref(props.selectedAccount);
 
 watch(selected, (value) => {
     router.get(
@@ -65,7 +34,7 @@ watch(selected, (value) => {
     );
 });
 
-function formatHour(hour: number): string {
+function formatHour(hour) {
     return `${String(hour).padStart(2, '0')}:00`;
 }
 
@@ -88,7 +57,7 @@ const bestChampion = computed(
 
 /* ---------- Hour chart ---------- */
 // Always 24 columns, even for hours with no games
-const hourBars = computed<HourStat[]>(() => {
+const hourBars = computed(() => {
     const byHour = new Map(props.stats.hours.map((h) => [h.hour, h]));
 
     return Array.from(
@@ -97,13 +66,13 @@ const hourBars = computed<HourStat[]>(() => {
     );
 });
 
-const selectedHour = ref<number | null>(null);
+const selectedHour = ref(null);
 
-function toggleHour(hour: number) {
+function toggleHour(hour) {
     selectedHour.value = selectedHour.value === hour ? null : hour;
 }
 
-function hourLabel(bar: HourStat): string {
+function hourLabel(bar) {
     return bar.games === 0
         ? `${formatHour(bar.hour)}: sin partidas`
         : `${formatHour(bar.hour)}: ${bar.winrate}% de winrate, ${bar.wins} victorias y ${bar.losses} derrotas`;

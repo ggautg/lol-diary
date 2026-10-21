@@ -1,19 +1,16 @@
-<script setup lang="ts">
+<script setup>
 import { usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
-const props = withDefaults(
-    defineProps<{
-        champion: string;
-        size?: number;
-    }>(),
-    { size: 32 },
-);
+const props = defineProps({
+    champion: { type: String, required: true },
+    size: { type: Number, default: 32 },
+});
 
 const page = usePage();
 const failed = ref(false);
 
-const version = computed(() => page.props.ddragonVersion as string | null | undefined);
+const version = computed(() => page.props.ddragonVersion);
 
 const src = computed(() =>
     version.value && !failed.value

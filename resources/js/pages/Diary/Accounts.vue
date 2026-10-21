@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { Pencil, RefreshCw, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
@@ -6,38 +6,18 @@ import DiaryLayout from '@/layouts/DiaryLayout.vue';
 
 defineOptions({ layout: DiaryLayout });
 
-interface Account {
-    id: number;
-    label: string;
-    game_name: string;
-    tag_line: string;
-    platform: string;
-    verified: boolean;
-    matches_count: number;
-    notes_count: number;
-}
-
-interface Platform {
-    value: string;
-    label: string;
-}
-
-const props = defineProps<{
-    accounts: Account[];
-    platforms: Platform[];
-    maxAccounts: number;
-}>();
+const props = defineProps({
+    accounts: { type: Array, required: true },
+    platforms: { type: Array, required: true },
+    maxAccounts: { type: Number, required: true },
+});
 
 const page = usePage();
 
-const successMessage = computed(
-    () => (page.props.flash as { success?: string } | undefined)?.success,
-);
-const errorMessage = computed(
-    () => (page.props.errors as Record<string, string>)?.account,
-);
+const successMessage = computed(() => page.props.flash?.success);
+const errorMessage = computed(() => page.props.errors?.account);
 
-function platformLabel(value: string): string {
+function platformLabel(value) {
     return props.platforms.find((p) => p.value === value)?.label ?? value.toUpperCase();
 }
 
@@ -58,10 +38,10 @@ function submitAdd() {
 }
 
 /* ---------- Edit ---------- */
-const editingId = ref<number | null>(null);
+const editingId = ref(null);
 const editForm = useForm({ label: '', platform: '' });
 
-function startEditing(account: Account) {
+function startEditing(account) {
     deletingId.value = null;
     editForm.clearErrors();
     editForm.label = account.label;
@@ -69,7 +49,7 @@ function startEditing(account: Account) {
     editingId.value = account.id;
 }
 
-function saveEdit(account: Account) {
+function saveEdit(account) {
     editForm.put(`/riot-accounts/${account.id}`, {
         preserveScroll: true,
         onSuccess: () => (editingId.value = null),
@@ -77,15 +57,15 @@ function saveEdit(account: Account) {
 }
 
 /* ---------- Sync & delete ---------- */
-const deletingId = ref<number | null>(null);
-const busy = ref<string | null>(null); // "sync-3", "delete-3"
+const deletingId = ref(null);
+const busy = ref(null); // "sync-3", "delete-3"
 
-function startDeleting(account: Account) {
+function startDeleting(account) {
     editingId.value = null;
     deletingId.value = account.id;
 }
 
-function syncAccount(account: Account) {
+function syncAccount(account) {
     router.post(
         `/riot-accounts/${account.id}/sync`,
         {},
@@ -97,7 +77,7 @@ function syncAccount(account: Account) {
     );
 }
 
-function deleteAccount(account: Account) {
+function deleteAccount(account) {
     router.delete(`/riot-accounts/${account.id}`, {
         preserveScroll: true,
         onStart: () => (busy.value = `delete-${account.id}`),

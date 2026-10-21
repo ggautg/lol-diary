@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { RefreshCw } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
@@ -8,46 +8,18 @@ import { csPerMinute, formatDuration, formatMatchDate, kdaRatio, roleLabel } fro
 
 defineOptions({ layout: DiaryLayout });
 
-interface Account {
-    id: number;
-    label: string;
-    game_name: string;
-    tag_line: string;
-    platform: string;
-    matches_count: number;
-}
-
-interface Match {
-    id: number;
-    account_label: string;
-    champion: string;
-    role: string | null;
-    win: boolean;
-    kills: number;
-    deaths: number;
-    assists: number;
-    damage_dealt: number;
-    cs: number;
-    duration: number;
-    played_at: string;
-}
-
-defineProps<{
-    accounts: Account[];
-    matches: Match[];
-}>();
+defineProps({
+    accounts: { type: Array, required: true },
+    matches: { type: Array, required: true },
+});
 
 const page = usePage();
-const loadingId = ref<number | null>(null);
+const loadingId = ref(null);
 
-const successMessage = computed(
-    () => (page.props.flash as { success?: string } | undefined)?.success,
-);
-const errorMessage = computed(
-    () => (page.props.errors as Record<string, string>)?.fetch,
-);
+const successMessage = computed(() => page.props.flash?.success);
+const errorMessage = computed(() => page.props.errors?.fetch);
 
-function fetchMatches(accountId: number) {
+function fetchMatches(accountId) {
     router.post(
         `/riot-accounts/${accountId}/fetch`,
         {},

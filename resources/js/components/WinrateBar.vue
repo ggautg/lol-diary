@@ -1,12 +1,9 @@
-<script setup lang="ts">
-withDefaults(
-    defineProps<{
-        winrate: number;
-        games: number;
-        minGames?: number;
-    }>(),
-    { minGames: 3 },
-);
+<script setup>
+defineProps({
+    winrate: { type: Number, required: true },
+    games: { type: Number, required: true },
+    minGames: { type: Number, default: 3 },
+});
 </script>
 
 <template>

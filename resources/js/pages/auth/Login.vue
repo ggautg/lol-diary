@@ -1,17 +1,15 @@
-<script setup lang="ts">
+<script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 
 defineOptions({ layout: LolAuthLayout });
 
-withDefaults(
-    defineProps<{
-        status?: string;
-        canResetPassword?: boolean;
-        canRegister?: boolean;
-    }>(),
-    { canResetPassword: true, canRegister: true },
-);
+// Without a default, an absent Boolean prop would be false and hide both links
+defineProps({
+    status: { type: String, default: undefined },
+    canResetPassword: { type: Boolean, default: true },
+    canRegister: { type: Boolean, default: true },
+});
 
 const form = useForm({
     email: '',

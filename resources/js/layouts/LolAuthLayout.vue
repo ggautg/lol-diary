@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 
 // Data Dragon ids are case sensitive and can differ from in-game names
@@ -14,18 +14,18 @@ const champions = [
 
 const INTERVAL_MS = 6000;
 
-const failed = reactive(new Set<string>());
+const failed = reactive(new Set());
 const index = ref(0);
-let timer: ReturnType<typeof setInterval> | undefined;
+let timer;
 
 // A slide that fails to load (offline, typo in the id) is skipped
 const slides = computed(() => champions.filter((champion) => !failed.has(champion.id)));
 const current = computed(() => index.value % Math.max(slides.value.length, 1));
 
-const splashUrl = (id: string) =>
+const splashUrl = (id) =>
     `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${id}_0.jpg`;
 
-function go(next: number) {
+function go(next) {
     index.value = next;
     restart();
 }
