@@ -58,4 +58,15 @@ class RiotApiService
             ->acceptJson()
             ->timeout(10);
     }
+
+    /**
+ * Get the current Riot ID of an account from its puuid.
+ */
+public function getAccountByPuuid(string $puuid, string $platform): array
+{
+    return $this->client($platform)
+        ->get("/riot/account/v1/accounts/by-puuid/{$puuid}")
+        ->throw()
+        ->json();
+}
 }

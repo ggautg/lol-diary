@@ -10,4 +10,12 @@ return [
         'na1' => 'americas',
         'br1' => 'americas',
     ],
+
+    // platform => label shown in the UI
+    'platform_labels' => [
+        'la1' => 'LAN',
+        'la2' => 'LAS',
+        'na1' => 'NA',
+        'br1' => 'BR',
+    ],
 ];

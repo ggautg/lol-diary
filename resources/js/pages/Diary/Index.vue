@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { RefreshCw } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
+import ChampionIcon from '@/components/ChampionIcon.vue';
+import DiaryLayout from '@/layouts/DiaryLayout.vue';
+import { csPerMinute, formatDuration, formatMatchDate, kdaRatio, roleLabel } from '@/lib/lol';
+
+defineOptions({ layout: DiaryLayout });
 
 interface Account {
     id: number;
@@ -52,98 +58,109 @@ function fetchMatches(accountId: number) {
         },
     );
 }
-
-function formatDuration(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const rest = String(seconds % 60).padStart(2, '0');
-    return `${minutes}:${rest}`;
-}
-
-function formatDate(iso: string): string {
-    return new Date(iso).toLocaleString('es-PY', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    });
-}
 </script>
 
 <template>
-    <Head title="LoL Diary" />
 
-    <div class="mx-auto max-w-5xl space-y-6 p-6">
-        <h1 class="text-2xl font-bold">LoL Diary</h1>
+    <Head title="Partidas" />
 
-        <Link href="/diary/calendar" class="text-sm underline">Ver calendario</Link>
-        <p v-if="successMessage" class="rounded bg-green-100 p-3 text-green-800">
-            {{ successMessage }}
-        </p>
-        <p v-if="errorMessage" class="rounded bg-red-100 p-3 text-red-800">
-            {{ errorMessage }}
-        </p>
+    <div class="lol-container">
+        <header>
+            <h1 class="lol-page-title">Partidas</h1>
+            <p class="lol-page-sub">Tus cuentas y las últimas partidas importadas.</p>
+        </header>
 
-        <section class="grid gap-3 sm:grid-cols-3">
-            <div
-                v-for="account in accounts"
-                :key="account.id"
-                class="rounded border p-4"
-            >
-                <p class="font-semibold">{{ account.label }}</p>
-                <p class="text-sm opacity-70">
-                    {{ account.game_name }}#{{ account.tag_line }} ·
-                    {{ account.platform.toUpperCase() }}
-                </p>
-                <p class="mt-1 text-sm">{{ account.matches_count }} partidas</p>
-                <button
-                    class="mt-3 rounded bg-black px-3 py-1 text-sm text-white disabled:opacity-50"
-                    :disabled="loadingId !== null"
-                    @click="fetchMatches(account.id)"
-                >
-                    {{ loadingId === account.id ? 'Importando...' : 'Fetch' }}
-                </button>
+        <p v-if="successMessage" class="lol-notice">{{ successMessage }}</p>
+        <p v-if="errorMessage" class="lol-notice lol-notice--error">{{ errorMessage }}</p>
+
+        <section>
+            <h2 class="lol-section-title">Cuentas</h2>
+
+            <div v-if="accounts.length === 0" class="lol-panel text-sm">
+                Todavía no tienes cuentas.
+                <Link href="/diary/accounts" class="lol-link">Añade la primera</Link>.
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <article v-for="(account, i) in accounts" :key="account.id"
+                    class="lol-panel lol-panel--interactive lol-rise" :style="{ animationDelay: `${i * 70}ms` }">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <p class="lol-account-label">{{ account.label }}</p>
+                            <p class="lol-account-id">{{ account.game_name }}#{{ account.tag_line }}</p>
+                        </div>
+                        <span class="lol-badge">{{ account.platform.toUpperCase() }}</span>
+                    </div>
+
+                    <p class="lol-account-count">
+                        <strong>{{ account.matches_count }}</strong>
+                        partidas
+                    </p>
+
+                    <button type="button" class="lol-btn" :disabled="loadingId !== null"
+                        @click="fetchMatches(account.id)">
+                        <RefreshCw :size="14" :class="{ 'lol-spin': loadingId === account.id }" />
+                        {{ loadingId === account.id ? 'Importando...' : 'Fetch' }}
+                    </button>
+                </article>
             </div>
         </section>
 
         <section>
-            <h2 class="mb-2 text-lg font-semibold">Últimas partidas</h2>
-            <p v-if="matches.length === 0" class="opacity-70">
+            <h2 class="lol-section-title">Últimas partidas</h2>
+
+            <div v-if="matches.length === 0" class="lol-panel text-sm">
                 Todavía no hay partidas. Pulsa Fetch en una cuenta.
-            </p>
-            <div v-else class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead>
-                        <tr class="border-b">
-                            <th class="p-2">Fecha</th>
-                            <th class="p-2">Cuenta</th>
-                            <th class="p-2">Campeón</th>
-                            <th class="p-2">Rol</th>
-                            <th class="p-2">KDA</th>
-                            <th class="p-2">Daño</th>
-                            <th class="p-2">CS</th>
-                            <th class="p-2">Duración</th>
-                            <th class="p-2">Resultado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="match in matches" :key="match.id" class="border-b">
-                            <td class="p-2">{{ formatDate(match.played_at) }}</td>
-                            <td class="p-2">{{ match.account_label }}</td>
-                            <td class="p-2">{{ match.champion }}</td>
-                            <td class="p-2">{{ match.role ?? '-' }}</td>
-                            <td class="p-2">
-                                {{ match.kills }}/{{ match.deaths }}/{{ match.assists }}
-                            </td>
-                            <td class="p-2">{{ match.damage_dealt.toLocaleString() }}</td>
-                            <td class="p-2">{{ match.cs }}</td>
-                            <td class="p-2">{{ formatDuration(match.duration) }}</td>
-                            <td
-                                class="p-2 font-semibold"
-                                :class="match.win ? 'text-green-600' : 'text-red-600'"
-                            >
-                                {{ match.win ? 'Victoria' : 'Derrota' }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            </div>
+
+            <div v-else class="lol-panel lol-rise !p-2">
+                <div class="lol-table-wrap">
+                    <table class="lol-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Cuenta</th>
+                                <th>Campeón</th>
+                                <th>Rol</th>
+                                <th>KDA</th>
+                                <th>Daño</th>
+                                <th>CS</th>
+                                <th>Duración</th>
+                                <th>Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="match in matches" :key="match.id" :data-result="match.win ? 'win' : 'loss'">
+                                <td class="lol-num">{{ formatMatchDate(match.played_at) }}</td>
+                                <td>{{ match.account_label }}</td>
+                                <td>
+                                    <div class="lol-champ-cell">
+                                        <ChampionIcon :champion="match.champion" :size="32" />
+                                        <span class="lol-strong">{{ match.champion }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ roleLabel(match.role) }}</td>
+                                <td class="lol-num">
+                                    <span class="lol-strong">{{ match.kills }}/{{ match.deaths }}/{{ match.assists
+                                        }}</span>
+                                    <span class="lol-muted"> {{ kdaRatio(match.kills, match.deaths, match.assists)
+                                        }}</span>
+                                </td>
+                                <td class="lol-num">{{ match.damage_dealt.toLocaleString('es-PY') }}</td>
+                                <td class="lol-num">
+                                    {{ match.cs }}
+                                    <span class="lol-muted">{{ csPerMinute(match.cs, match.duration) }}/m</span>
+                                </td>
+                                <td class="lol-num">{{ formatDuration(match.duration) }}</td>
+                                <td>
+                                    <span class="lol-badge" :class="match.win ? 'lol-badge--win' : 'lol-badge--loss'">
+                                        {{ match.win ? 'Victoria' : 'Derrota' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </div>

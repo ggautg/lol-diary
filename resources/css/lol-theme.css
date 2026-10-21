@@ -1,0 +1,1386 @@
+/* ---------- Design tokens ---------- */
+:root {
+    --lol-black: #010a13;
+    --lol-navy: #091428;
+    --lol-panel: #1e2328;
+
+    --lol-gold: #c8aa6e;
+    --lol-gold-bright: #f0e6d2;
+    --lol-gold-deep: #c89b3c;
+    --lol-gold-dark: #785a28;
+    --lol-border-dim: #463714;
+
+    --lol-text: #a09b8c;
+    --lol-text-bright: #f0e6d2;
+
+    --lol-teal: #0ac8b9;
+    --lol-win: #0ac8b9;
+    --lol-loss: #e84057;
+
+    --lol-font-display: 'Cinzel', 'Times New Roman', serif;
+    --lol-font-body: 'Barlow', system-ui, sans-serif;
+}
+
+/* ---------- App shell ---------- */
+.lol-app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--lol-text);
+    font-family: var(--lol-font-body);
+    background:
+        radial-gradient(ellipse 80% 40% at 50% -10%, rgb(10 200 185 / 0.1), transparent 70%),
+        linear-gradient(180deg, var(--lol-navy) 0%, var(--lol-black) 60%);
+    background-attachment: fixed;
+}
+
+.lol-app main {
+    flex: 1;
+}
+
+.lol-app h1,
+.lol-app h2,
+.lol-app h3 {
+    font-family: var(--lol-font-display);
+    color: var(--lol-gold-bright);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lol-app :focus-visible {
+    outline: 2px solid var(--lol-gold);
+    outline-offset: 2px;
+}
+
+/* ---------- Header ---------- */
+.lol-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgb(1 10 19 / 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--lol-border-dim);
+    box-shadow: 0 1px 0 rgb(200 170 110 / 0.15);
+}
+
+.lol-header-inner {
+    max-width: 72rem;
+    margin-inline: auto;
+    min-height: 3.5rem;
+    padding-inline: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.lol-brand {
+    font-family: var(--lol-font-display);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+    text-decoration: none;
+}
+
+.lol-nav {
+    display: flex;
+    align-self: stretch;
+    gap: 1.75rem;
+}
+
+.lol-nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lol-text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.lol-nav a:hover,
+.lol-nav a[aria-current='page'] {
+    color: var(--lol-gold-bright);
+}
+
+.lol-nav a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--lol-gold), transparent);
+}
+
+.lol-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+}
+
+.lol-user button {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+    border: 1px solid var(--lol-gold-dark);
+    padding: 0.25rem 0.75rem;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.lol-user button:hover {
+    color: var(--lol-gold-bright);
+    border-color: var(--lol-gold);
+}
+
+/* ---------- Footer ---------- */
+.lol-footer {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    border-top: 1px solid var(--lol-border-dim);
+    opacity: 0.7;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 40rem) {
+    .lol-header-inner {
+        gap: 1rem;
+        padding-inline: 1rem;
+    }
+
+    .lol-nav {
+        gap: 1rem;
+    }
+
+    .lol-user span {
+        display: none;
+    }
+}
+
+/* ---------- Auth screens ---------- */
+.lol-auth {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow: hidden;
+    background: var(--lol-black);
+    font-family: var(--lol-font-body);
+    color: var(--lol-text);
+}
+
+.lol-auth-slides {
+    position: absolute;
+    inset: 0;
+}
+
+.lol-auth-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 1.4s ease-in-out;
+}
+
+.lol-auth-slide.is-active {
+    opacity: 1;
+    animation: lol-kenburns 9s ease-out forwards;
+}
+
+@keyframes lol-kenburns {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+.lol-auth-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at center, rgb(1 10 19 / 0.35) 0%, rgb(1 10 19 / 0.85) 100%),
+        linear-gradient(180deg, rgb(1 10 19 / 0.5) 0%, transparent 30%, rgb(1 10 19 / 0.9) 100%);
+}
+
+.lol-auth-caption {
+    position: absolute;
+    left: 2rem;
+    bottom: 2rem;
+    font-family: var(--lol-font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-auth-dots {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.lol-auth-dots button {
+    width: 0.7rem;
+    height: 0.7rem;
+    transform: rotate(45deg);
+    border: 1px solid var(--lol-gold);
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.lol-auth-dots button.is-active,
+.lol-auth-dots button:hover {
+    background: var(--lol-gold);
+}
+
+.lol-auth-panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 26rem;
+    padding: 2.25rem 2rem;
+    background: rgb(1 10 19 / 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--lol-gold-dark);
+    box-shadow:
+        0 0 0 3px rgb(1 10 19 / 0.6),
+        0 0 0 4px var(--lol-border-dim),
+        0 20px 60px rgb(0 0 0 / 0.6);
+}
+
+.lol-auth-brand {
+    text-align: center;
+    font-family: var(--lol-font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-auth-subtitle {
+    margin-top: 0.4rem;
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* ---------- Form controls ---------- */
+.lol-field {
+    display: block;
+}
+
+.lol-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    font: inherit;
+    color: var(--lol-text-bright);
+    background: rgb(30 35 40 / 0.8);
+    border: 1px solid var(--lol-border-dim);
+    transition: border-color 0.15s;
+}
+
+.lol-input:focus {
+    outline: none;
+    border-color: var(--lol-gold);
+}
+
+.lol-input::placeholder {
+    color: var(--lol-text);
+    opacity: 0.5;
+}
+
+.lol-error {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--lol-loss);
+}
+
+.lol-notice {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--lol-teal);
+    border: 1px solid var(--lol-teal);
+    background: rgb(10 200 185 / 0.08);
+}
+
+.lol-btn-primary {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: var(--lol-font-display);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lol-black);
+    background: linear-gradient(180deg, var(--lol-gold-bright), var(--lol-gold) 40%, var(--lol-gold-deep));
+    border: 1px solid var(--lol-gold-dark);
+    transition: filter 0.15s;
+}
+
+.lol-btn-primary:hover:not(:disabled) {
+    filter: brightness(1.12);
+}
+
+.lol-btn-primary:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.lol-link {
+    color: var(--lol-gold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.lol-link:hover {
+    color: var(--lol-gold-bright);
+}
+
+/* Respect users who ask for less motion: no zoom, no fade */
+@media (prefers-reduced-motion: reduce) {
+    .lol-auth-slide.is-active {
+        animation: none;
+    }
+
+    .lol-auth-slide {
+        transition: none;
+    }
+}
+
+@media (max-width: 40rem) {
+    .lol-auth-caption {
+        display: none;
+    }
+}
+
+/* ================= Components ================= */
+.lol-app {
+    scrollbar-color: var(--lol-gold-dark) var(--lol-black);
+    scrollbar-width: thin;
+}
+
+.lol-app ::selection {
+    background: var(--lol-gold-deep);
+    color: var(--lol-black);
+}
+
+/* ---------- Layout helpers ---------- */
+.lol-container {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 2rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.lol-page-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.lol-page-sub {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+}
+
+.lol-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.lol-section-title::before {
+    content: '';
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    transform: rotate(45deg);
+    background: var(--lol-gold);
+}
+
+.lol-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--lol-gold-dark), transparent);
+}
+
+/* ---------- Panel (gold corner brackets) ---------- */
+.lol-panel {
+    position: relative;
+    padding: 1.25rem;
+    background: linear-gradient(180deg, rgb(30 35 40 / 0.75), rgb(9 20 40 / 0.85));
+    border: 1px solid var(--lol-border-dim);
+}
+
+.lol-panel::before,
+.lol-panel::after {
+    content: '';
+    position: absolute;
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 0 solid var(--lol-gold);
+    pointer-events: none;
+}
+
+.lol-panel::before {
+    top: -1px;
+    left: -1px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+
+.lol-panel::after {
+    right: -1px;
+    bottom: -1px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.lol-panel--interactive {
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.lol-panel--interactive:hover {
+    border-color: var(--lol-gold-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+}
+
+/* ---------- Account card ---------- */
+.lol-account-label {
+    font-family: var(--lol-font-display);
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lol-text-bright);
+}
+
+.lol-account-id {
+    margin-top: 0.15rem;
+    font-size: 0.8rem;
+}
+
+.lol-account-count {
+    margin-block: 1rem;
+    font-size: 0.85rem;
+}
+
+.lol-account-count strong {
+    margin-right: 0.25rem;
+    font-family: var(--lol-font-display);
+    font-size: 1.5rem;
+    color: var(--lol-text-bright);
+}
+
+/* ---------- Buttons ---------- */
+.lol-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+    background: transparent;
+    border: 1px solid var(--lol-gold-dark);
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.lol-btn:hover:not(:disabled) {
+    color: var(--lol-gold-bright);
+    border-color: var(--lol-gold);
+    background: rgb(200 170 110 / 0.08);
+}
+
+.lol-btn:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+@keyframes lol-spin {
+    to { transform: rotate(360deg); }
+}
+
+.lol-spin {
+    animation: lol-spin 1s linear infinite;
+}
+
+/* ---------- Notices & badges ---------- */
+.lol-notice--error {
+    color: var(--lol-loss);
+    border-color: var(--lol-loss);
+    background: rgb(232 64 87 / 0.08);
+}
+
+.lol-badge {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lol-text);
+    border: 1px solid var(--lol-border-dim);
+}
+
+.lol-badge--win {
+    color: var(--lol-win);
+    border-color: var(--lol-win);
+    background: rgb(10 200 185 / 0.08);
+}
+
+.lol-badge--loss {
+    color: var(--lol-loss);
+    border-color: var(--lol-loss);
+    background: rgb(232 64 87 / 0.08);
+}
+
+/* ---------- Champion icon ---------- */
+.lol-champ-icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 2px solid var(--lol-gold-dark);
+    background: var(--lol-panel);
+    font-family: var(--lol-font-display);
+    font-size: 0.8rem;
+    color: var(--lol-gold);
+}
+
+.lol-champ-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.12); /* crops the built-in border of Riot's square icons */
+}
+
+.lol-champ-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* ---------- Table ---------- */
+.lol-table-wrap {
+    overflow-x: auto;
+}
+
+.lol-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.lol-table th {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+    border-bottom: 1px solid var(--lol-gold-dark);
+}
+
+.lol-table td {
+    padding: 0.65rem 0.75rem;
+    white-space: nowrap;
+    border-bottom: 1px solid rgb(70 55 20 / 0.35);
+}
+
+.lol-table tbody tr {
+    transition: background 0.15s;
+}
+
+.lol-table tbody tr:hover {
+    background: rgb(200 170 110 / 0.05);
+}
+
+.lol-table tr[data-result='win'] td:first-child {
+    box-shadow: inset 3px 0 0 var(--lol-win);
+}
+
+.lol-table tr[data-result='loss'] td:first-child {
+    box-shadow: inset 3px 0 0 var(--lol-loss);
+}
+
+.lol-num {
+    font-variant-numeric: tabular-nums;
+}
+
+.lol-strong {
+    color: var(--lol-text-bright);
+}
+
+.lol-muted {
+    font-size: 0.75rem;
+    opacity: 0.65;
+}
+
+/* ---------- Entrance animation ---------- */
+@keyframes lol-rise {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.lol-rise {
+    animation: lol-rise 0.45s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lol-rise {
+        animation: none;
+    }
+
+    .lol-panel--interactive {
+        transition: none;
+    }
+
+    .lol-panel--interactive:hover {
+        transform: none;
+    }
+
+    .lol-spin {
+        animation-duration: 3s;
+    }
+}
+
+/* ================= Calendar & forms ================= */
+.lol-app {
+    color-scheme: dark; /* native controls (select popup, checkbox, scrollbars) go dark */
+}
+
+a.lol-btn,
+a.lol-icon-btn {
+    text-decoration: none;
+}
+
+/* ---------- Toolbar ---------- */
+.lol-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.lol-month-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.lol-month-label {
+    min-width: 11rem;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+}
+
+.lol-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--lol-gold);
+    border: 1px solid var(--lol-gold-dark);
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.lol-icon-btn:hover {
+    color: var(--lol-gold-bright);
+    border-color: var(--lol-gold);
+    background: rgb(200 170 110 / 0.08);
+}
+
+.lol-select {
+    padding: 0.45rem 0.75rem;
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--lol-text-bright);
+    background-color: rgb(30 35 40 / 0.8);
+    border: 1px solid var(--lol-border-dim);
+}
+
+.lol-select:focus {
+    outline: none;
+    border-color: var(--lol-gold);
+}
+
+/* ---------- Stat strip (reused by the stats page) ---------- */
+.lol-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.lol-stat {
+    min-width: 7rem;
+    padding: 0.5rem 1rem;
+    background: rgb(30 35 40 / 0.5);
+    border: 1px solid var(--lol-border-dim);
+}
+
+.lol-stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-stat-value {
+    font-family: var(--lol-font-display);
+    font-size: 1.35rem;
+    color: var(--lol-text-bright);
+    font-variant-numeric: tabular-nums;
+}
+
+.lol-win-text { color: var(--lol-win); }
+.lol-loss-text { color: var(--lol-loss); }
+
+/* ---------- Month grid ---------- */
+.lol-cal {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.35rem;
+}
+
+.lol-cal-head {
+    padding: 0.25rem;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-day {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    min-height: 5.75rem;
+    padding: 0.4rem;
+    text-align: left;
+    background: rgb(30 35 40 / 0.35);
+    border: 1px solid rgb(70 55 20 / 0.45);
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.lol-day:hover {
+    border-color: var(--lol-gold-dark);
+    background: rgb(30 35 40 / 0.7);
+}
+
+.lol-day[data-result='win'] {
+    background: linear-gradient(180deg, rgb(30 35 40 / 0.35), rgb(10 200 185 / 0.14));
+}
+
+.lol-day[data-result='loss'] {
+    background: linear-gradient(180deg, rgb(30 35 40 / 0.35), rgb(232 64 87 / 0.14));
+}
+
+.lol-day[data-result='mixed'] {
+    background: linear-gradient(180deg, rgb(30 35 40 / 0.35), rgb(200 170 110 / 0.1));
+}
+
+.lol-day.is-today {
+    border-color: var(--lol-gold);
+    box-shadow: 0 0 0 1px rgb(200 170 110 / 0.35), 0 0 18px rgb(200 170 110 / 0.12);
+}
+
+.lol-day.is-selected {
+    border-color: var(--lol-teal);
+    box-shadow: 0 0 0 1px var(--lol-teal);
+}
+
+.lol-day-num {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.lol-day.is-today .lol-day-num {
+    font-weight: 700;
+    color: var(--lol-gold-bright);
+}
+
+.lol-day-icons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.lol-day-icon {
+    position: relative;
+    display: inline-flex;
+}
+
+.lol-day-icon[data-result='win'] .lol-champ-icon { border-color: var(--lol-win); }
+.lol-day-icon[data-result='loss'] .lol-champ-icon { border-color: var(--lol-loss); }
+
+.lol-day-icon.has-note::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--lol-gold);
+    border: 1px solid var(--lol-black);
+}
+
+/* ---------- Day detail: match cards ---------- */
+.lol-match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.lol-match {
+    padding: 0;
+}
+
+.lol-match[data-result='win'] { box-shadow: inset 3px 0 0 var(--lol-win); }
+.lol-match[data-result='loss'] { box-shadow: inset 3px 0 0 var(--lol-loss); }
+
+.lol-match-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    padding: 0.9rem 1rem 0.9rem 1.25rem;
+}
+
+.lol-match-champ {
+    flex: 1 1 13rem;
+    min-width: 0;
+}
+
+.lol-match-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+}
+
+.lol-mini-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-mini-value {
+    color: var(--lol-text-bright);
+    font-variant-numeric: tabular-nums;
+}
+
+.lol-match-note,
+.lol-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem 1rem 1.25rem;
+    border-top: 1px solid rgb(70 55 20 / 0.35);
+}
+
+.lol-form {
+    gap: 1.1rem;
+}
+
+.lol-note-label {
+    margin-right: 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+textarea.lol-input {
+    min-height: 4rem;
+    resize: vertical;
+}
+
+.lol-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.lol-btn-primary.lol-btn-inline {
+    width: auto;
+    padding: 0.55rem 1.5rem;
+    font-size: 0.8rem;
+}
+
+/* ---------- Mood chips ---------- */
+.lol-app [data-mood='focused'] { --mood-color: var(--lol-teal); }
+.lol-app [data-mood='calm'] { --mood-color: #5383e8; }
+.lol-app [data-mood='hyped'] { --mood-color: var(--lol-gold); }
+.lol-app [data-mood='tired'] { --mood-color: #a09b8c; }
+.lol-app [data-mood='tilted'] { --mood-color: var(--lol-loss); }
+
+.lol-badge[data-mood] {
+    color: var(--mood-color);
+    border-color: var(--mood-color);
+}
+
+.lol-mood-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.lol-mood {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lol-text);
+    background: transparent;
+    border: 1px solid var(--lol-border-dim);
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.lol-mood:hover {
+    color: var(--lol-text-bright);
+    border-color: var(--lol-gold-dark);
+}
+
+.lol-mood[aria-pressed='true'] {
+    font-weight: 600;
+    color: var(--lol-black);
+    background: var(--mood-color);
+    border-color: var(--mood-color);
+}
+
+/* ---------- Tags ---------- */
+.lol-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.lol-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.65rem;
+    font-size: 0.75rem;
+    color: var(--lol-gold-bright);
+    background: rgb(200 170 110 / 0.08);
+    border: 1px solid var(--lol-gold-dark);
+    border-radius: 999px;
+}
+
+.lol-tag button {
+    display: inline-flex;
+    color: var(--lol-text);
+}
+
+.lol-tag button:hover {
+    color: var(--lol-loss);
+}
+
+button.lol-tag--suggest {
+    color: var(--lol-text);
+    background: transparent;
+    border-style: dashed;
+    cursor: pointer;
+}
+
+button.lol-tag--suggest:hover {
+    color: var(--lol-gold-bright);
+    border-color: var(--lol-gold);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 40rem) {
+    .lol-cal {
+        gap: 0.2rem;
+    }
+
+    .lol-day {
+        min-height: 4.5rem;
+        padding: 0.3rem;
+    }
+
+    .lol-month-label {
+        min-width: 8rem;
+        font-size: 1rem;
+    }
+}
+
+
+/* ================= Stats ================= */
+.lol-overview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem 2.5rem;
+}
+
+.lol-overview-body {
+    display: flex;
+    flex: 1 1 20rem;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.lol-stat-value--sm {
+    font-size: 1rem;
+}
+
+/* ---------- Winrate ring (pure CSS) ---------- */
+.lol-ring {
+    --pct: 0;
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--lol-win) calc(var(--pct) * 1%), rgb(232 64 87 / 0.55) 0);
+}
+
+.lol-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0.55rem;
+    border-radius: 50%;
+    background: var(--lol-navy);
+    border: 1px solid var(--lol-border-dim);
+}
+
+.lol-ring-value {
+    position: relative;
+    font-family: var(--lol-font-display);
+    font-size: 1.5rem;
+    color: var(--lol-text-bright);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Horizontal bar ---------- */
+.lol-bar {
+    position: relative;
+    height: 0.55rem;
+    background: rgb(160 155 140 / 0.15);
+}
+
+/* The 50% mark */
+.lol-bar::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: 50%;
+    width: 1px;
+    background: var(--lol-gold-dark);
+}
+
+.lol-bar-fill {
+    height: 100%;
+    transform-origin: left;
+    animation: lol-grow-x 0.7s ease-out both;
+}
+
+.lol-bar-fill[data-side='win'] {
+    background: linear-gradient(90deg, #07857c, var(--lol-win));
+}
+
+.lol-bar-fill[data-side='loss'] {
+    background: linear-gradient(90deg, #8f2433, var(--lol-loss));
+}
+
+.lol-bar.is-faint .lol-bar-fill {
+    opacity: 0.4;
+}
+
+@keyframes lol-grow-x {
+    from { transform: scaleX(0); }
+}
+
+@keyframes lol-grow-y {
+    from { transform: scaleY(0); }
+}
+
+/* ---------- Label | bar | value rows ---------- */
+.lol-bar-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.lol-bar-row {
+    display: grid;
+    grid-template-columns: 9rem 1fr 7.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.lol-bar-row-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    color: var(--lol-text-bright);
+}
+
+.lol-bar-row-value {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.lol-dot {
+    flex: none;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--mood-color, var(--lol-gold));
+}
+
+/* ---------- Hour-of-day chart ---------- */
+.lol-hours {
+    display: grid;
+    grid-template-columns: repeat(24, minmax(0, 1fr));
+    gap: 0.2rem;
+}
+
+.lol-hour {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0;
+    background: transparent;
+}
+
+.lol-hour-track {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 8rem;
+    background: rgb(160 155 140 / 0.1);
+    transition: outline-color 0.15s;
+    outline: 1px solid transparent;
+}
+
+/* The 50% mark */
+.lol-hour-track::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 50%;
+    height: 1px;
+    background: var(--lol-gold-dark);
+}
+
+.lol-hour:hover .lol-hour-track {
+    outline-color: var(--lol-gold-dark);
+}
+
+.lol-hour[aria-pressed='true'] .lol-hour-track {
+    outline-color: var(--lol-teal);
+}
+
+.lol-hour-fill {
+    display: block;
+    width: 100%;
+    transform-origin: bottom;
+    animation: lol-grow-y 0.7s ease-out both;
+}
+
+.lol-hour-fill[data-side='win'] {
+    background: linear-gradient(0deg, #07857c, var(--lol-win));
+}
+
+.lol-hour-fill[data-side='loss'] {
+    background: linear-gradient(0deg, #8f2433, var(--lol-loss));
+}
+
+.lol-hour-fill.is-faint {
+    opacity: 0.4;
+}
+
+.lol-hour-label {
+    font-size: 0.62rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.lol-hour-count {
+    min-height: 1em;
+    font-size: 0.62rem;
+    opacity: 0.6;
+}
+
+/* ---------- Winrate inside a table cell ---------- */
+.lol-wr-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.lol-wr-cell .lol-bar {
+    width: 5rem;
+}
+
+/* ---------- Checkbox ---------- */
+.lol-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.lol-check input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--lol-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lol-bar-fill,
+    .lol-hour-fill {
+        animation: none;
+    }
+}
+
+@media (max-width: 40rem) {
+    .lol-bar-row {
+        grid-template-columns: 6.5rem 1fr 5.5rem;
+        gap: 0.5rem;
+    }
+
+    .lol-wr-cell .lol-bar {
+        width: 3rem;
+    }
+
+    /* 24 labels do not fit on a phone: show every other hour */
+    .lol-hour:nth-child(even) .lol-hour-label {
+        visibility: hidden;
+    }
+}
+
+/* ================= Account management ================= */
+.lol-form-row {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr auto;
+    gap: 1rem;
+    align-items: start;
+}
+
+.lol-form-row .lol-btn-primary {
+    margin-top: 1.4rem; /* aligns with the inputs, below their labels */
+}
+
+.lol-hint {
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    opacity: 0.75;
+}
+
+.lol-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+}
+
+.lol-inline-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-top: 1rem;
+}
+
+.lol-btn--danger {
+    color: var(--lol-loss);
+    border-color: rgb(232 64 87 / 0.5);
+}
+
+.lol-btn--danger:hover:not(:disabled) {
+    color: #fff;
+    background: var(--lol-loss);
+    border-color: var(--lol-loss);
+}
+
+.lol-confirm {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    border: 1px solid var(--lol-loss);
+    background: rgb(232 64 87 / 0.08);
+}
+
+.lol-confirm p + p {
+    margin-top: 0.4rem;
+}
+
+.lol-confirm .lol-card-actions {
+    margin-top: 0.8rem;
+}
+
+@media (max-width: 48rem) {
+    .lol-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .lol-form-row .lol-btn-primary {
+        margin-top: 0;
+    }
+}

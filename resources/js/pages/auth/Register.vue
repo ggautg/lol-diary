@@ -1,114 +1,93 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
-import { store } from '@/routes/register';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 
-defineProps<{
-    passwordRules: string;
-}>();
+defineOptions({ layout: LolAuthLayout });
 
-defineOptions({
-    layout: {
-        title: 'Create an account',
-        description: 'Enter your details below to create your account',
-    },
+const form = useForm({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
 });
+
+function submit() {
+    form.post('/register', {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+}
 </script>
 
 <template>
-    <Head title="Register" />
+    <Head title="Crear cuenta" />
 
-    <Form
-        v-bind="store.form()"
-        :reset-on-success="['password', 'password_confirmation']"
-        v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
-    >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="name">Name</Label>
-                <Input
-                    id="name"
-                    type="text"
-                    required
-                    v-focus
-                    :tabindex="1"
-                    autocomplete="name"
-                    name="name"
-                    placeholder="Full name"
-                />
-                <InputError :message="errors.name" />
-            </div>
+    <p class="lol-auth-subtitle">Crea tu cuenta</p>
 
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    required
-                    :tabindex="2"
-                    autocomplete="email"
-                    name="email"
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password">Password</Label>
-                <PasswordInput
-                    id="password"
-                    required
-                    :tabindex="3"
-                    autocomplete="new-password"
-                    name="password"
-                    placeholder="Password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password_confirmation">Confirm password</Label>
-                <PasswordInput
-                    id="password_confirmation"
-                    required
-                    :tabindex="4"
-                    autocomplete="new-password"
-                    name="password_confirmation"
-                    placeholder="Confirm password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password_confirmation" />
-            </div>
-
-            <Button
-                type="submit"
-                class="mt-2 w-full"
-                tabindex="5"
-                :disabled="processing"
-                data-test="register-user-button"
-            >
-                <Spinner v-if="processing" />
-                Create account
-            </Button>
+    <form class="mt-6 space-y-5" @submit.prevent="submit">
+        <div class="lol-field">
+            <label class="lol-label" for="name">Nombre</label>
+            <input
+                id="name"
+                v-model="form.name"
+                type="text"
+                class="lol-input"
+                autocomplete="name"
+                autofocus
+                required
+                placeholder="Tu nombre"
+            />
+            <p v-if="form.errors.name" class="lol-error">{{ form.errors.name }}</p>
         </div>
 
-        <div class="text-center text-sm text-muted-foreground">
-            Already have an account?
-            <TextLink
-                :href="login()"
-                class="underline underline-offset-4"
-                :tabindex="6"
-                >Log in</TextLink
-            >
+        <div class="lol-field">
+            <label class="lol-label" for="email">Email</label>
+            <input
+                id="email"
+                v-model="form.email"
+                type="email"
+                class="lol-input"
+                autocomplete="email"
+                required
+                placeholder="tu@email.com"
+            />
+            <p v-if="form.errors.email" class="lol-error">{{ form.errors.email }}</p>
         </div>
-    </Form>
+
+        <div class="lol-field">
+            <label class="lol-label" for="password">Contraseña</label>
+            <input
+                id="password"
+                v-model="form.password"
+                type="password"
+                class="lol-input"
+                autocomplete="new-password"
+                required
+            />
+            <p v-if="form.errors.password" class="lol-error">{{ form.errors.password }}</p>
+        </div>
+
+        <div class="lol-field">
+            <label class="lol-label" for="password_confirmation">Repite la contraseña</label>
+            <input
+                id="password_confirmation"
+                v-model="form.password_confirmation"
+                type="password"
+                class="lol-input"
+                autocomplete="new-password"
+                required
+            />
+            <p v-if="form.errors.password_confirmation" class="lol-error">
+                {{ form.errors.password_confirmation }}
+            </p>
+        </div>
+
+        <button type="submit" class="lol-btn-primary" :disabled="form.processing">
+            {{ form.processing ? 'Creando cuenta...' : 'Crear cuenta' }}
+        </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm">
+        ¿Ya tienes cuenta?
+        <Link href="/login" class="lol-link">Inicia sesión</Link>
+    </p>
 </template>

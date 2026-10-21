@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\LolDiaryController::index
- * @see app/Http/Controllers/LolDiaryController.php:17
+ * @see app/Http/Controllers/LolDiaryController.php:19
  * @route '/diary'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
- * @see app/Http/Controllers/LolDiaryController.php:36
+ * @see app/Http/Controllers/LolDiaryController.php:38
  * @route '/riot-accounts/{riotAccount}/fetch'
  */
 export const fetch = (args: { riotAccount: number | { id: number } } | [riotAccount: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -94,7 +94,7 @@ fetch.definition = {
 
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
- * @see app/Http/Controllers/LolDiaryController.php:36
+ * @see app/Http/Controllers/LolDiaryController.php:38
  * @route '/riot-accounts/{riotAccount}/fetch'
  */
 fetch.url = (args: { riotAccount: number | { id: number } } | [riotAccount: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -127,7 +127,7 @@ fetch.url = (args: { riotAccount: number | { id: number } } | [riotAccount: numb
 
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
- * @see app/Http/Controllers/LolDiaryController.php:36
+ * @see app/Http/Controllers/LolDiaryController.php:38
  * @route '/riot-accounts/{riotAccount}/fetch'
  */
 fetch.post = (args: { riotAccount: number | { id: number } } | [riotAccount: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -137,7 +137,7 @@ fetch.post = (args: { riotAccount: number | { id: number } } | [riotAccount: num
 
     /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
- * @see app/Http/Controllers/LolDiaryController.php:36
+ * @see app/Http/Controllers/LolDiaryController.php:38
  * @route '/riot-accounts/{riotAccount}/fetch'
  */
     const fetchForm = (args: { riotAccount: number | { id: number } } | [riotAccount: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -147,7 +147,7 @@ fetch.post = (args: { riotAccount: number | { id: number } } | [riotAccount: num
 
             /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
- * @see app/Http/Controllers/LolDiaryController.php:36
+ * @see app/Http/Controllers/LolDiaryController.php:38
  * @route '/riot-accounts/{riotAccount}/fetch'
  */
         fetchForm.post = (args: { riotAccount: number | { id: number } } | [riotAccount: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -158,7 +158,7 @@ fetch.post = (args: { riotAccount: number | { id: number } } | [riotAccount: num
     fetch.form = fetchForm
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
 export const calendar = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -173,7 +173,7 @@ calendar.definition = {
 
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
 calendar.url = (options?: RouteQueryOptions) => {
@@ -182,7 +182,7 @@ calendar.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
 calendar.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -191,7 +191,7 @@ calendar.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
 calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -201,7 +201,7 @@ calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
     const calendarForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -211,7 +211,7 @@ calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
         calendarForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -220,7 +220,7 @@ calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
- * @see app/Http/Controllers/LolDiaryController.php:58
+ * @see app/Http/Controllers/LolDiaryController.php:53
  * @route '/diary/calendar'
  */
         calendarForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

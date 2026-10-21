@@ -1,66 +1,55 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
-import { email } from '@/routes/password';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 
-defineOptions({
-    layout: {
-        title: 'Forgot password',
-        description: 'Enter your email to receive a password reset link',
-    },
-});
+defineOptions({ layout: LolAuthLayout });
 
 defineProps<{
     status?: string;
 }>();
+
+const form = useForm({
+    email: '',
+});
+
+function submit() {
+    form.post('/forgot-password');
+}
 </script>
 
 <template>
-    <Head title="Forgot password" />
+    <Head title="Recuperar contraseña" />
 
-    <div
-        v-if="status"
-        class="mb-4 text-center text-sm font-medium text-green-600"
-    >
-        {{ status }}
-    </div>
+    <p class="lol-auth-subtitle">Recupera tu contraseña</p>
 
-    <div class="space-y-6">
-        <Form v-bind="email.form()" v-slot="{ errors, processing }">
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    autocomplete="off"
-                    v-focus
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
-            </div>
+    <p class="mt-5 text-center text-sm">
+        Escribe tu email y te enviaremos un enlace para crear una contraseña nueva.
+    </p>
 
-            <div class="my-6 flex items-center justify-start">
-                <Button
-                    class="w-full"
-                    :disabled="processing"
-                    data-test="email-password-reset-link-button"
-                >
-                    <Spinner v-if="processing" />
-                    Email password reset link
-                </Button>
-            </div>
-        </Form>
+    <p v-if="status" class="lol-notice mt-5">{{ status }}</p>
 
-        <div class="space-x-1 text-center text-sm text-muted-foreground">
-            <span>Or, return to</span>
-            <TextLink :href="login()">log in</TextLink>
+    <form class="mt-6 space-y-5" @submit.prevent="submit">
+        <div class="lol-field">
+            <label class="lol-label" for="email">Email</label>
+            <input
+                id="email"
+                v-model="form.email"
+                type="email"
+                class="lol-input"
+                autocomplete="email"
+                autofocus
+                required
+                placeholder="tu@email.com"
+            />
+            <p v-if="form.errors.email" class="lol-error">{{ form.errors.email }}</p>
         </div>
-    </div>
+
+        <button type="submit" class="lol-btn-primary" :disabled="form.processing">
+            {{ form.processing ? 'Enviando...' : 'Enviar enlace' }}
+        </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm">
+        <Link href="/login" class="lol-link">Volver a iniciar sesión</Link>
+    </p>
 </template>
