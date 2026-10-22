@@ -18,7 +18,10 @@ const successMessage = computed(() => page.props.flash?.success);
 const errorMessage = computed(() => page.props.errors?.account);
 
 function platformLabel(value) {
-    return props.platforms.find((p) => p.value === value)?.label ?? value.toUpperCase();
+    return (
+        props.platforms.find((p) => p.value === value)?.label ??
+        value.toUpperCase()
+    );
 }
 
 const atLimit = computed(() => props.accounts.length >= props.maxAccounts);
@@ -27,7 +30,10 @@ const atLimit = computed(() => props.accounts.length >= props.maxAccounts);
 const addForm = useForm({
     riot_id: '',
     label: '',
-    platform: props.platforms.find((p) => p.value === 'la2')?.value ?? props.platforms[0]?.value ?? 'la2',
+    platform:
+        props.platforms.find((p) => p.value === 'la2')?.value ??
+        props.platforms[0]?.value ??
+        'la2',
 });
 
 function submitAdd() {
@@ -93,11 +99,15 @@ function deleteAccount(account) {
     <div class="lol-container">
         <header>
             <h1 class="lol-page-title">Cuentas</h1>
-            <p class="lol-page-sub">Las cuentas de League of Legends que sigue tu diario.</p>
+            <p class="lol-page-sub">
+                Las cuentas de League of Legends que sigue tu diario.
+            </p>
         </header>
 
         <p v-if="successMessage" class="lol-notice">{{ successMessage }}</p>
-        <p v-if="errorMessage" class="lol-notice lol-notice--error">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="lol-notice lol-notice--error">
+            {{ errorMessage }}
+        </p>
 
         <!-- Add -->
         <section>
@@ -118,11 +128,15 @@ function deleteAccount(account) {
                             spellcheck="false"
                             required
                         />
-                        <p v-if="addForm.errors.riot_id" class="lol-error">{{ addForm.errors.riot_id }}</p>
+                        <p v-if="addForm.errors.riot_id" class="lol-error">
+                            {{ addForm.errors.riot_id }}
+                        </p>
                     </div>
 
                     <div class="lol-field">
-                        <label class="lol-label" for="new_label">Etiqueta</label>
+                        <label class="lol-label" for="new_label"
+                            >Etiqueta</label
+                        >
                         <input
                             id="new_label"
                             v-model="addForm.label"
@@ -132,15 +146,31 @@ function deleteAccount(account) {
                             maxlength="30"
                             required
                         />
-                        <p v-if="addForm.errors.label" class="lol-error">{{ addForm.errors.label }}</p>
+                        <p v-if="addForm.errors.label" class="lol-error">
+                            {{ addForm.errors.label }}
+                        </p>
                     </div>
 
                     <div class="lol-field">
-                        <label class="lol-label" for="new_platform">Servidor</label>
-                        <select id="new_platform" v-model="addForm.platform" class="lol-input">
-                            <option v-for="p in platforms" :key="p.value" :value="p.value">{{ p.label }}</option>
+                        <label class="lol-label" for="new_platform"
+                            >Servidor</label
+                        >
+                        <select
+                            id="new_platform"
+                            v-model="addForm.platform"
+                            class="lol-input"
+                        >
+                            <option
+                                v-for="p in platforms"
+                                :key="p.value"
+                                :value="p.value"
+                            >
+                                {{ p.label }}
+                            </option>
                         </select>
-                        <p v-if="addForm.errors.platform" class="lol-error">{{ addForm.errors.platform }}</p>
+                        <p v-if="addForm.errors.platform" class="lol-error">
+                            {{ addForm.errors.platform }}
+                        </p>
                     </div>
 
                     <button
@@ -153,8 +183,8 @@ function deleteAccount(account) {
                 </form>
 
                 <p class="lol-hint">
-                    Verificamos la cuenta con Riot antes de guardarla.
-                    Tienes {{ accounts.length }} de {{ maxAccounts }} cuentas.
+                    Verificamos la cuenta con Riot antes de guardarla. Tienes
+                    {{ accounts.length }} de {{ maxAccounts }} cuentas.
                 </p>
             </div>
         </section>
@@ -167,7 +197,10 @@ function deleteAccount(account) {
                 Aún no tienes cuentas. Añade la primera arriba.
             </div>
 
-            <div v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+                v-else
+                class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
                 <article
                     v-for="(account, i) in accounts"
                     :key="account.id"
@@ -177,9 +210,13 @@ function deleteAccount(account) {
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
                             <p class="lol-account-label">{{ account.label }}</p>
-                            <p class="lol-account-id">{{ account.game_name }}#{{ account.tag_line }}</p>
+                            <p class="lol-account-id">
+                                {{ account.game_name }}#{{ account.tag_line }}
+                            </p>
                         </div>
-                        <span class="lol-badge">{{ platformLabel(account.platform) }}</span>
+                        <span class="lol-badge">{{
+                            platformLabel(account.platform)
+                        }}</span>
                     </div>
 
                     <p class="lol-account-count">
@@ -190,7 +227,11 @@ function deleteAccount(account) {
                     <span
                         class="lol-badge"
                         :class="{ 'lol-badge--win': account.verified }"
-                        :title="account.verified ? 'Verificada con Riot' : 'Se verificará al importar partidas o al actualizar el nombre'"
+                        :title="
+                            account.verified
+                                ? 'Verificada con Riot'
+                                : 'Se verificará al importar partidas o al actualizar el nombre'
+                        "
                     >
                         {{ account.verified ? 'Verificada' : 'Sin verificar' }}
                     </span>
@@ -202,7 +243,11 @@ function deleteAccount(account) {
                         @submit.prevent="saveEdit(account)"
                     >
                         <div class="lol-field">
-                            <label class="lol-label" :for="`label-${account.id}`">Etiqueta</label>
+                            <label
+                                class="lol-label"
+                                :for="`label-${account.id}`"
+                                >Etiqueta</label
+                            >
                             <input
                                 :id="`label-${account.id}`"
                                 v-model="editForm.label"
@@ -211,34 +256,77 @@ function deleteAccount(account) {
                                 maxlength="30"
                                 required
                             />
-                            <p v-if="editForm.errors.label" class="lol-error">{{ editForm.errors.label }}</p>
+                            <p v-if="editForm.errors.label" class="lol-error">
+                                {{ editForm.errors.label }}
+                            </p>
                         </div>
 
                         <div class="lol-field">
-                            <label class="lol-label" :for="`platform-${account.id}`">Servidor</label>
-                            <select :id="`platform-${account.id}`" v-model="editForm.platform" class="lol-input">
-                                <option v-for="p in platforms" :key="p.value" :value="p.value">{{ p.label }}</option>
+                            <label
+                                class="lol-label"
+                                :for="`platform-${account.id}`"
+                                >Servidor</label
+                            >
+                            <select
+                                :id="`platform-${account.id}`"
+                                v-model="editForm.platform"
+                                class="lol-input"
+                            >
+                                <option
+                                    v-for="p in platforms"
+                                    :key="p.value"
+                                    :value="p.value"
+                                >
+                                    {{ p.label }}
+                                </option>
                             </select>
-                            <p v-if="editForm.errors.platform" class="lol-error">{{ editForm.errors.platform }}</p>
+                            <p
+                                v-if="editForm.errors.platform"
+                                class="lol-error"
+                            >
+                                {{ editForm.errors.platform }}
+                            </p>
                         </div>
 
                         <div class="lol-card-actions">
-                            <button type="submit" class="lol-btn-primary lol-btn-inline" :disabled="editForm.processing">
-                                {{ editForm.processing ? 'Guardando...' : 'Guardar' }}
+                            <button
+                                type="submit"
+                                class="lol-btn-primary lol-btn-inline"
+                                :disabled="editForm.processing"
+                            >
+                                {{
+                                    editForm.processing
+                                        ? 'Guardando...'
+                                        : 'Guardar'
+                                }}
                             </button>
-                            <button type="button" class="lol-btn" @click="editingId = null">Cancelar</button>
+                            <button
+                                type="button"
+                                class="lol-btn"
+                                @click="editingId = null"
+                            >
+                                Cancelar
+                            </button>
                         </div>
                     </form>
 
                     <!-- Delete confirmation -->
-                    <div v-else-if="deletingId === account.id" class="lol-confirm" role="alert">
+                    <div
+                        v-else-if="deletingId === account.id"
+                        class="lol-confirm"
+                        role="alert"
+                    >
                         <p>
-                            Vas a eliminar <strong>{{ account.label }}</strong>. Se borrarán sus
-                            <strong>{{ account.matches_count }}</strong> partidas y
-                            <strong>{{ account.notes_count }}</strong> notas del diario.
+                            Vas a eliminar <strong>{{ account.label }}</strong
+                            >. Se borrarán sus
+                            <strong>{{ account.matches_count }}</strong>
+                            partidas y
+                            <strong>{{ account.notes_count }}</strong> notas del
+                            diario.
                         </p>
                         <p v-if="account.notes_count > 0">
-                            Las notas no se pueden recuperar, ni siquiera volviendo a añadir la cuenta.
+                            Las notas no se pueden recuperar, ni siquiera
+                            volviendo a añadir la cuenta.
                         </p>
                         <p v-else>No se puede deshacer.</p>
 
@@ -250,15 +338,29 @@ function deleteAccount(account) {
                                 @click="deleteAccount(account)"
                             >
                                 <Trash2 :size="14" />
-                                {{ busy === `delete-${account.id}` ? 'Eliminando...' : 'Sí, eliminar' }}
+                                {{
+                                    busy === `delete-${account.id}`
+                                        ? 'Eliminando...'
+                                        : 'Sí, eliminar'
+                                }}
                             </button>
-                            <button type="button" class="lol-btn" @click="deletingId = null">Cancelar</button>
+                            <button
+                                type="button"
+                                class="lol-btn"
+                                @click="deletingId = null"
+                            >
+                                Cancelar
+                            </button>
                         </div>
                     </div>
 
                     <!-- Actions -->
                     <div v-else class="lol-card-actions">
-                        <button type="button" class="lol-btn" @click="startEditing(account)">
+                        <button
+                            type="button"
+                            class="lol-btn"
+                            @click="startEditing(account)"
+                        >
                             <Pencil :size="14" />
                             Editar
                         </button>
@@ -269,10 +371,23 @@ function deleteAccount(account) {
                             title="Pregunta a Riot el nombre actual de esta cuenta"
                             @click="syncAccount(account)"
                         >
-                            <RefreshCw :size="14" :class="{ 'lol-spin': busy === `sync-${account.id}` }" />
-                            {{ busy === `sync-${account.id}` ? 'Consultando...' : 'Actualizar nombre' }}
+                            <RefreshCw
+                                :size="14"
+                                :class="{
+                                    'lol-spin': busy === `sync-${account.id}`,
+                                }"
+                            />
+                            {{
+                                busy === `sync-${account.id}`
+                                    ? 'Consultando...'
+                                    : 'Actualizar nombre'
+                            }}
                         </button>
-                        <button type="button" class="lol-btn lol-btn--danger" @click="startDeleting(account)">
+                        <button
+                            type="button"
+                            class="lol-btn lol-btn--danger"
+                            @click="startDeleting(account)"
+                        >
                             <Trash2 :size="14" />
                             Eliminar
                         </button>

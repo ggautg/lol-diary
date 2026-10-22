@@ -23,7 +23,8 @@ function submit() {
     <p class="lol-auth-subtitle">Recupera tu contraseña</p>
 
     <p class="mt-5 text-center text-sm">
-        Escribe tu email y te enviaremos un enlace para crear una contraseña nueva.
+        Escribe tu email y te enviaremos un enlace para crear una contraseña
+        nueva.
     </p>
 
     <p v-if="status" class="lol-notice mt-5">{{ status }}</p>
@@ -41,10 +42,16 @@ function submit() {
                 required
                 placeholder="tu@email.com"
             />
-            <p v-if="form.errors.email" class="lol-error">{{ form.errors.email }}</p>
+            <p v-if="form.errors.email" class="lol-error">
+                {{ form.errors.email }}
+            </p>
         </div>
 
-        <button type="submit" class="lol-btn-primary" :disabled="form.processing">
+        <button
+            type="submit"
+            class="lol-btn-primary"
+            :disabled="form.processing"
+        >
             {{ form.processing ? 'Enviando...' : 'Enviar enlace' }}
         </button>
     </form>

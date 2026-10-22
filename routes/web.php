@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LolDiaryController;
 use App\Http\Controllers\DiaryEntryController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\WeaknessController;
 use App\Http\Controllers\RiotAccountController;
 
 Route::get('/', fn() => redirect()->route(auth()->check() ? 'diary.calendar' : 'login'))->name('home');
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('diary/calendar', [LolDiaryController::class, 'calendar'])->name('diary.calendar');
     Route::put('matches/{lolMatch}/diary-entry', [DiaryEntryController::class, 'update'])->name('diary-entry.update');
     Route::get('diary/stats', [StatsController::class, 'index'])->name('diary.stats');
+    Route::get('diary/weaknesses', [WeaknessController::class, 'index'])->name('diary.weaknesses');
     Route::get('diary/accounts', [RiotAccountController::class, 'index'])->name('diary.accounts');
     Route::post('riot-accounts', [RiotAccountController::class, 'store'])->middleware('throttle:10,1')->name('riot-accounts.store');
     Route::put('riot-accounts/{riotAccount}', [RiotAccountController::class, 'update'])->name('riot-accounts.update');

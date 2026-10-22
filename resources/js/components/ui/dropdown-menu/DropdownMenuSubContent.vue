@@ -1,19 +1,117 @@
-<script setup lang="ts">
-import type { DropdownMenuSubContentEmits, DropdownMenuSubContentProps } from "reka-ui"
-import type { HTMLAttributes } from "vue"
-import { reactiveOmit } from "@vueuse/core"
-import {
-  DropdownMenuSubContent,
-  useForwardPropsEmits,
-} from "reka-ui"
-import { cn } from "@/lib/utils"
-
-const props = defineProps<DropdownMenuSubContentProps & { class?: HTMLAttributes["class"] }>()
-const emits = defineEmits<DropdownMenuSubContentEmits>()
-
-const delegatedProps = reactiveOmit(props, "class")
-
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+<script setup>
+import { reactiveOmit } from "@vueuse/core";
+import { DropdownMenuSubContent, useForwardPropsEmits } from "reka-ui";
+import { cn } from "@/lib/utils";
+const props = defineProps({
+	forceMount: {
+		type: Boolean,
+		required: false
+	},
+	asChild: {
+		type: Boolean,
+		required: false
+	},
+	as: {
+		type: [
+			String,
+			Object,
+			Function
+		],
+		required: false
+	},
+	memoDependencies: {
+		type: Array,
+		required: false
+	},
+	sideOffset: {
+		type: Number,
+		required: false
+	},
+	sideFlip: {
+		type: Boolean,
+		required: false
+	},
+	alignOffset: {
+		type: Number,
+		required: false
+	},
+	alignFlip: {
+		type: Boolean,
+		required: false
+	},
+	avoidCollisions: {
+		type: Boolean,
+		required: false
+	},
+	collisionBoundary: {
+		type: [Object, Array],
+		required: false
+	},
+	collisionPadding: {
+		type: [Number, Object],
+		required: false
+	},
+	arrowPadding: {
+		type: Number,
+		required: false
+	},
+	hideShiftedArrow: {
+		type: Boolean,
+		required: false
+	},
+	sticky: {
+		type: String,
+		required: false
+	},
+	hideWhenDetached: {
+		type: Boolean,
+		required: false
+	},
+	positionStrategy: {
+		type: String,
+		required: false
+	},
+	updatePositionStrategy: {
+		type: String,
+		required: false
+	},
+	disableUpdateOnLayoutShift: {
+		type: Boolean,
+		required: false
+	},
+	prioritizePosition: {
+		type: Boolean,
+		required: false
+	},
+	reference: {
+		type: Object,
+		required: false
+	},
+	loop: {
+		type: Boolean,
+		required: false
+	},
+	class: {
+		type: [
+			String,
+			Boolean,
+			Object,
+			Array
+		],
+		required: false
+	}
+});
+const emits = defineEmits([
+	"escapeKeyDown",
+	"pointerDownOutside",
+	"focusOutside",
+	"interactOutside",
+	"entryFocus",
+	"openAutoFocus",
+	"closeAutoFocus"
+]);
+const delegatedProps = reactiveOmit(props, "class");
+const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>

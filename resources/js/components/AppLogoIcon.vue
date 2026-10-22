@@ -1,15 +1,11 @@
-<script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-
-defineOptions({
-    inheritAttrs: false,
+<script setup>
+defineOptions({ inheritAttrs: false });
+defineProps({
+    className: {
+        type: [String, Boolean, Object, Array],
+        required: false,
+    },
 });
-
-type Props = {
-    className?: HTMLAttributes['class'];
-};
-
-defineProps<Props>();
 </script>
 
 <template>

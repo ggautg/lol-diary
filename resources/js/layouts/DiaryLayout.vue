@@ -8,6 +8,7 @@ const page = usePage();
 const items = [
     { label: 'Calendario', href: '/diary/calendar' },
     { label: 'Estadísticas', href: '/diary/stats' },
+    { label: 'Falencias', href: '/diary/weaknesses' },
     { label: 'Partidas', href: '/diary' },
     { label: 'Cuentas', href: '/diary/accounts' },
 ];
@@ -28,15 +29,27 @@ function logout() {
                 <Link href="/diary/calendar" class="lol-brand">LoL Diary</Link>
 
                 <nav class="lol-nav" aria-label="Principal">
-                    <Link v-for="item in items" :key="item.href" :href="item.href"
-                        :aria-current="currentPath === item.href ? 'page' : undefined">
+                    <Link
+                        v-for="item in items"
+                        :key="item.href"
+                        :href="item.href"
+                        :aria-current="
+                            currentPath === item.href ? 'page' : undefined
+                        "
+                    >
                         {{ item.label }}
                     </Link>
                 </nav>
 
                 <div class="lol-user">
                     <span>{{ userName }}</span>
-                    <button v-if="canInstall" type="button" @click="promptInstall">Instalar app</button>
+                    <button
+                        v-if="canInstall"
+                        type="button"
+                        @click="promptInstall"
+                    >
+                        Instalar app
+                    </button>
                     <button type="button" @click="logout">Salir</button>
                 </div>
             </div>
@@ -47,10 +60,11 @@ function logout() {
         </main>
 
         <footer class="lol-footer">
-            LoL Diary isn't endorsed by Riot Games and doesn't reflect the views or opinions of
-            Riot Games or anyone officially involved in producing or managing Riot Games properties.
-            Riot Games, and all associated properties are trademarks or registered trademarks of
-            Riot Games, Inc.
+            LoL Diary isn't endorsed by Riot Games and doesn't reflect the views
+            or opinions of Riot Games or anyone officially involved in producing
+            or managing Riot Games properties. Riot Games, and all associated
+            properties are trademarks or registered trademarks of Riot Games,
+            Inc.
         </footer>
     </div>
 </template>

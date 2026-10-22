@@ -19,7 +19,9 @@ const index = ref(0);
 let timer;
 
 // A slide that fails to load (offline, typo in the id) is skipped
-const slides = computed(() => champions.filter((champion) => !failed.has(champion.id)));
+const slides = computed(() =>
+    champions.filter((champion) => !failed.has(champion.id)),
+);
 const current = computed(() => index.value % Math.max(slides.value.length, 1));
 
 const splashUrl = (id) =>
@@ -47,7 +49,9 @@ function stop() {
 }
 
 onMounted(() => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+    ).matches;
     if (!reduceMotion) {
         restart();
     }

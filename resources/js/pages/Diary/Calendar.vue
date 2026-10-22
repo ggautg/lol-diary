@@ -40,7 +40,9 @@ const detail = ref(null);
 
 const filtered = computed(() =>
     props.matches.filter(
-        (m) => selectedAccount.value === null || m.account_id === selectedAccount.value,
+        (m) =>
+            selectedAccount.value === null ||
+            m.account_id === selectedAccount.value,
     ),
 );
 
@@ -88,7 +90,10 @@ const cells = computed(() => {
     const list = [];
     for (let i = 0; i < firstWeekday; i++) list.push(null);
     for (let day = 1; day <= daysInMonth; day++) {
-        list.push({ day, date: `${props.month}-${String(day).padStart(2, '0')}` });
+        list.push({
+            day,
+            date: `${props.month}-${String(day).padStart(2, '0')}`,
+        });
     }
     return list;
 });
@@ -139,7 +144,11 @@ function toggleMood(value) {
 
 function addTag(raw = tagInput.value) {
     const name = raw.trim().toLowerCase();
-    if (name !== '' && !form.tags.includes(name) && form.tags.length < MAX_TAGS) {
+    if (
+        name !== '' &&
+        !form.tags.includes(name) &&
+        form.tags.length < MAX_TAGS
+    ) {
         form.tags.push(name);
     }
     tagInput.value = '';
@@ -188,8 +197,13 @@ watch(selectedDate, async (value) => {
 
     if (value) {
         await nextTick();
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        detail.value?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+        const reduceMotion = window.matchMedia(
+            '(prefers-reduced-motion: reduce)',
+        ).matches;
+        detail.value?.scrollIntoView({
+            behavior: reduceMotion ? 'auto' : 'smooth',
+            block: 'nearest',
+        });
     }
 });
 </script>
@@ -200,26 +214,48 @@ watch(selectedDate, async (value) => {
     <div class="lol-container">
         <header>
             <h1 class="lol-page-title">Calendario</h1>
-            <p class="lol-page-sub">Tus partidas día a día y lo que aprendiste de cada una.</p>
+            <p class="lol-page-sub">
+                Tus partidas día a día y lo que aprendiste de cada una.
+            </p>
         </header>
 
         <p v-if="successMessage" class="lol-notice">{{ successMessage }}</p>
 
         <div class="lol-toolbar">
             <div class="lol-month-nav">
-                <Link :href="`/diary/calendar?month=${prevMonth}`" class="lol-icon-btn" aria-label="Mes anterior" preserve-scroll>
+                <Link
+                    :href="`/diary/calendar?month=${prevMonth}`"
+                    class="lol-icon-btn"
+                    aria-label="Mes anterior"
+                    preserve-scroll
+                >
                     <ChevronLeft :size="18" />
                 </Link>
                 <h2 class="lol-month-label">{{ monthLabel }}</h2>
-                <Link :href="`/diary/calendar?month=${nextMonth}`" class="lol-icon-btn" aria-label="Mes siguiente" preserve-scroll>
+                <Link
+                    :href="`/diary/calendar?month=${nextMonth}`"
+                    class="lol-icon-btn"
+                    aria-label="Mes siguiente"
+                    preserve-scroll
+                >
                     <ChevronRight :size="18" />
                 </Link>
-                <Link href="/diary/calendar" class="lol-btn" preserve-scroll>Hoy</Link>
+                <Link href="/diary/calendar" class="lol-btn" preserve-scroll
+                    >Hoy</Link
+                >
             </div>
 
-            <select v-model="selectedAccount" class="lol-select" aria-label="Filtrar por cuenta">
+            <select
+                v-model="selectedAccount"
+                class="lol-select"
+                aria-label="Filtrar por cuenta"
+            >
                 <option :value="null">Todas las cuentas</option>
-                <option v-for="account in accounts" :key="account.id" :value="account.id">
+                <option
+                    v-for="account in accounts"
+                    :key="account.id"
+                    :value="account.id"
+                >
                     {{ account.label }}
                 </option>
             </select>
@@ -249,7 +285,9 @@ watch(selectedDate, async (value) => {
         </p>
 
         <div class="lol-cal">
-            <div v-for="day in weekdays" :key="day" class="lol-cal-head">{{ day }}</div>
+            <div v-for="day in weekdays" :key="day" class="lol-cal-head">
+                {{ day }}
+            </div>
 
             <template v-for="(cell, index) in cells" :key="index">
                 <div v-if="cell === null" aria-hidden="true" />
@@ -257,7 +295,10 @@ watch(selectedDate, async (value) => {
                     v-else
                     type="button"
                     class="lol-day"
-                    :class="{ 'is-today': cell.date === today, 'is-selected': selectedDate === cell.date }"
+                    :class="{
+                        'is-today': cell.date === today,
+                        'is-selected': selectedDate === cell.date,
+                    }"
                     :data-result="dayResult(cell.date)"
                     :aria-label="dayLabel(cell)"
                     :aria-pressed="selectedDate === cell.date"
@@ -265,7 +306,10 @@ watch(selectedDate, async (value) => {
                 >
                     <span class="lol-day-num">{{ cell.day }}</span>
 
-                    <span v-if="dayMatches(cell.date).length" class="lol-day-icons">
+                    <span
+                        v-if="dayMatches(cell.date).length"
+                        class="lol-day-icons"
+                    >
                         <span
                             v-for="match in dayMatches(cell.date).slice(0, 3)"
                             :key="match.id"
@@ -274,9 +318,15 @@ watch(selectedDate, async (value) => {
                             :data-result="match.win ? 'win' : 'loss'"
                             :title="`${match.champion} · ${match.win ? 'Victoria' : 'Derrota'}`"
                         >
-                            <ChampionIcon :champion="match.champion" :size="26" />
+                            <ChampionIcon
+                                :champion="match.champion"
+                                :size="26"
+                            />
                         </span>
-                        <span v-if="dayMatches(cell.date).length > 3" class="lol-muted">
+                        <span
+                            v-if="dayMatches(cell.date).length > 3"
+                            class="lol-muted"
+                        >
                             +{{ dayMatches(cell.date).length - 3 }}
                         </span>
                     </span>
@@ -300,11 +350,15 @@ watch(selectedDate, async (value) => {
                 >
                     <div class="lol-match-row">
                         <div class="lol-champ-cell lol-match-champ">
-                            <ChampionIcon :champion="match.champion" :size="44" />
+                            <ChampionIcon
+                                :champion="match.champion"
+                                :size="44"
+                            />
                             <div>
                                 <p class="lol-strong">{{ match.champion }}</p>
                                 <p class="lol-muted">
-                                    {{ roleLabel(match.role) }} · {{ match.account_label }} · {{ match.time }}
+                                    {{ roleLabel(match.role) }} ·
+                                    {{ match.account_label }} · {{ match.time }}
                                 </p>
                             </div>
                         </div>
@@ -313,53 +367,101 @@ watch(selectedDate, async (value) => {
                             <div>
                                 <p class="lol-mini-label">KDA</p>
                                 <p class="lol-mini-value">
-                                    {{ match.kills }}/{{ match.deaths }}/{{ match.assists }}
-                                    <span class="lol-muted">{{ kdaRatio(match.kills, match.deaths, match.assists) }}</span>
+                                    {{ match.kills }}/{{ match.deaths }}/{{
+                                        match.assists
+                                    }}
+                                    <span class="lol-muted">{{
+                                        kdaRatio(
+                                            match.kills,
+                                            match.deaths,
+                                            match.assists,
+                                        )
+                                    }}</span>
                                 </p>
                             </div>
                             <div>
                                 <p class="lol-mini-label">Daño</p>
-                                <p class="lol-mini-value">{{ match.damage_dealt.toLocaleString('es-PY') }}</p>
+                                <p class="lol-mini-value">
+                                    {{
+                                        match.damage_dealt.toLocaleString(
+                                            'es-PY',
+                                        )
+                                    }}
+                                </p>
                             </div>
                             <div>
                                 <p class="lol-mini-label">CS</p>
                                 <p class="lol-mini-value">
                                     {{ match.cs }}
-                                    <span class="lol-muted">{{ csPerMinute(match.cs, match.duration) }}/m</span>
+                                    <span class="lol-muted"
+                                        >{{
+                                            csPerMinute(
+                                                match.cs,
+                                                match.duration,
+                                            )
+                                        }}/m</span
+                                    >
                                 </p>
                             </div>
                             <div>
                                 <p class="lol-mini-label">Duración</p>
-                                <p class="lol-mini-value">{{ formatDuration(match.duration) }}</p>
+                                <p class="lol-mini-value">
+                                    {{ formatDuration(match.duration) }}
+                                </p>
                             </div>
                         </div>
 
-                        <span class="lol-badge" :class="match.win ? 'lol-badge--win' : 'lol-badge--loss'">
+                        <span
+                            class="lol-badge"
+                            :class="
+                                match.win ? 'lol-badge--win' : 'lol-badge--loss'
+                            "
+                        >
                             {{ match.win ? 'Victoria' : 'Derrota' }}
                         </span>
 
-                        <button type="button" class="lol-btn" @click="startEditing(match)">
+                        <button
+                            type="button"
+                            class="lol-btn"
+                            @click="startEditing(match)"
+                        >
                             <Pencil :size="14" />
                             {{ match.has_entry ? 'Editar' : 'Anotar' }}
                         </button>
                     </div>
 
-                    <div v-if="match.has_entry && editingId !== match.id" class="lol-match-note">
+                    <div
+                        v-if="match.has_entry && editingId !== match.id"
+                        class="lol-match-note"
+                    >
                         <p v-if="match.mood">
-                            <span class="lol-badge" :data-mood="match.mood">{{ moodLabel(match.mood) }}</span>
+                            <span class="lol-badge" :data-mood="match.mood">{{
+                                moodLabel(match.mood)
+                            }}</span>
                         </p>
                         <p v-if="match.notes" class="whitespace-pre-line">
-                            <span class="lol-note-label">Notas</span>{{ match.notes }}
+                            <span class="lol-note-label">Notas</span
+                            >{{ match.notes }}
                         </p>
                         <p v-if="match.lesson" class="whitespace-pre-line">
-                            <span class="lol-note-label">Lección</span>{{ match.lesson }}
+                            <span class="lol-note-label">Lección</span
+                            >{{ match.lesson }}
                         </p>
                         <div v-if="match.tags.length" class="lol-tags">
-                            <span v-for="tag in match.tags" :key="tag" class="lol-tag">#{{ tag }}</span>
+                            <span
+                                v-for="tag in match.tags"
+                                :key="tag"
+                                class="lol-tag"
+                                >#{{ tag }}</span
+                            >
                         </div>
                     </div>
 
-                    <form v-if="editingId === match.id" class="lol-form" @submit.prevent="saveEntry(match)">
+                    <form
+                        v-if="editingId === match.id"
+                        class="lol-form"
+                        @submit.prevent="saveEntry(match)"
+                    >
                         <div>
                             <p class="lol-label">Estado de ánimo</p>
                             <div class="lol-mood-group">
@@ -375,11 +477,15 @@ watch(selectedDate, async (value) => {
                                     {{ m.label }}
                                 </button>
                             </div>
-                            <p v-if="form.errors.mood" class="lol-error">{{ form.errors.mood }}</p>
+                            <p v-if="form.errors.mood" class="lol-error">
+                                {{ form.errors.mood }}
+                            </p>
                         </div>
 
                         <div>
-                            <label class="lol-label" :for="`notes-${match.id}`">¿Qué pasó en la partida?</label>
+                            <label class="lol-label" :for="`notes-${match.id}`"
+                                >¿Qué pasó en la partida?</label
+                            >
                             <textarea
                                 :id="`notes-${match.id}`"
                                 v-model="form.notes"
@@ -387,11 +493,15 @@ watch(selectedDate, async (value) => {
                                 maxlength="5000"
                                 class="lol-input"
                             />
-                            <p v-if="form.errors.notes" class="lol-error">{{ form.errors.notes }}</p>
+                            <p v-if="form.errors.notes" class="lol-error">
+                                {{ form.errors.notes }}
+                            </p>
                         </div>
 
                         <div>
-                            <label class="lol-label" :for="`lesson-${match.id}`">¿Qué quiero mejorar?</label>
+                            <label class="lol-label" :for="`lesson-${match.id}`"
+                                >¿Qué quiero mejorar?</label
+                            >
                             <textarea
                                 :id="`lesson-${match.id}`"
                                 v-model="form.lesson"
@@ -399,16 +509,28 @@ watch(selectedDate, async (value) => {
                                 maxlength="2000"
                                 class="lol-input"
                             />
-                            <p v-if="form.errors.lesson" class="lol-error">{{ form.errors.lesson }}</p>
+                            <p v-if="form.errors.lesson" class="lol-error">
+                                {{ form.errors.lesson }}
+                            </p>
                         </div>
 
                         <div>
-                            <label class="lol-label" :for="`tag-${match.id}`">Etiquetas</label>
+                            <label class="lol-label" :for="`tag-${match.id}`"
+                                >Etiquetas</label
+                            >
 
                             <div v-if="form.tags.length" class="lol-tags mb-2">
-                                <span v-for="tag in form.tags" :key="tag" class="lol-tag">
+                                <span
+                                    v-for="tag in form.tags"
+                                    :key="tag"
+                                    class="lol-tag"
+                                >
                                     #{{ tag }}
-                                    <button type="button" :aria-label="`Quitar etiqueta ${tag}`" @click="removeTag(tag)">
+                                    <button
+                                        type="button"
+                                        :aria-label="`Quitar etiqueta ${tag}`"
+                                        @click="removeTag(tag)"
+                                    >
                                         <X :size="12" />
                                     </button>
                                 </span>
@@ -434,11 +556,17 @@ watch(selectedDate, async (value) => {
                                     Añadir
                                 </button>
                             </div>
-                            <p v-if="form.tags.length >= MAX_TAGS" class="lol-muted mt-1">
+                            <p
+                                v-if="form.tags.length >= MAX_TAGS"
+                                class="lol-muted mt-1"
+                            >
                                 Máximo {{ MAX_TAGS }} etiquetas.
                             </p>
 
-                            <div v-if="suggestions.length" class="lol-tags mt-2">
+                            <div
+                                v-if="suggestions.length"
+                                class="lol-tags mt-2"
+                            >
                                 <button
                                     v-for="tag in suggestions"
                                     :key="tag"
@@ -450,14 +578,28 @@ watch(selectedDate, async (value) => {
                                 </button>
                             </div>
 
-                            <p v-if="form.errors.tags" class="lol-error">{{ form.errors.tags }}</p>
+                            <p v-if="form.errors.tags" class="lol-error">
+                                {{ form.errors.tags }}
+                            </p>
                         </div>
 
                         <div class="lol-actions">
-                            <button type="submit" class="lol-btn-primary lol-btn-inline" :disabled="form.processing">
-                                {{ form.processing ? 'Guardando...' : 'Guardar' }}
+                            <button
+                                type="submit"
+                                class="lol-btn-primary lol-btn-inline"
+                                :disabled="form.processing"
+                            >
+                                {{
+                                    form.processing ? 'Guardando...' : 'Guardar'
+                                }}
                             </button>
-                            <button type="button" class="lol-btn" @click="editingId = null">Cancelar</button>
+                            <button
+                                type="button"
+                                class="lol-btn"
+                                @click="editingId = null"
+                            >
+                                Cancelar
+                            </button>
                         </div>
                     </form>
                 </article>

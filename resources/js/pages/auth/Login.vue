@@ -44,13 +44,19 @@ function submit() {
                 required
                 placeholder="tu@email.com"
             />
-            <p v-if="form.errors.email" class="lol-error">{{ form.errors.email }}</p>
+            <p v-if="form.errors.email" class="lol-error">
+                {{ form.errors.email }}
+            </p>
         </div>
 
         <div class="lol-field">
             <div class="flex items-center justify-between">
                 <label class="lol-label" for="password">Contraseña</label>
-                <Link v-if="canResetPassword" href="/forgot-password" class="lol-link mb-1 text-xs">
+                <Link
+                    v-if="canResetPassword"
+                    href="/forgot-password"
+                    class="lol-link mb-1 text-xs"
+                >
                     ¿Olvidaste tu contraseña?
                 </Link>
             </div>
@@ -62,7 +68,9 @@ function submit() {
                 autocomplete="current-password"
                 required
             />
-            <p v-if="form.errors.password" class="lol-error">{{ form.errors.password }}</p>
+            <p v-if="form.errors.password" class="lol-error">
+                {{ form.errors.password }}
+            </p>
         </div>
 
         <label class="flex items-center gap-2 text-sm">
@@ -70,7 +78,11 @@ function submit() {
             Recordarme
         </label>
 
-        <button type="submit" class="lol-btn-primary" :disabled="form.processing">
+        <button
+            type="submit"
+            class="lol-btn-primary"
+            :disabled="form.processing"
+        >
             {{ form.processing ? 'Entrando...' : 'Entrar' }}
         </button>
     </form>

@@ -1,8 +1,31 @@
-<script setup lang="ts">
-import type { AvatarImageProps } from "reka-ui"
-import { AvatarImage } from "reka-ui"
-
-const props = defineProps<AvatarImageProps>()
+<script setup>
+import { AvatarImage } from "reka-ui";
+const props = defineProps({
+	src: {
+		type: String,
+		required: true
+	},
+	referrerPolicy: {
+		type: String,
+		required: false
+	},
+	crossOrigin: {
+		type: String,
+		required: false
+	},
+	asChild: {
+		type: Boolean,
+		required: false
+	},
+	as: {
+		type: [
+			String,
+			Object,
+			Function
+		],
+		required: false
+	}
+});
 </script>
 
 <template>

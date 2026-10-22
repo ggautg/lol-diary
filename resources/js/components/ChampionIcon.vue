@@ -20,8 +20,17 @@ const src = computed(() =>
 </script>
 
 <template>
-    <span class="lol-champ-icon" :style="{ width: `${size}px`, height: `${size}px` }">
-        <img v-if="src" :src="src" alt="" loading="lazy" @error="failed = true" />
+    <span
+        class="lol-champ-icon"
+        :style="{ width: `${size}px`, height: `${size}px` }"
+    >
+        <img
+            v-if="src"
+            :src="src"
+            alt=""
+            loading="lazy"
+            @error="failed = true"
+        />
         <span v-else aria-hidden="true">{{ champion.charAt(0) }}</span>
     </span>
 </template>

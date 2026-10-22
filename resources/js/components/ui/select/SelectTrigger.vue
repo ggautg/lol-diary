@@ -1,18 +1,46 @@
-<script setup lang="ts">
-import type { SelectTriggerProps } from "reka-ui"
-import type { HTMLAttributes } from "vue"
-import { ChevronDown } from "@lucide/vue"
-import { reactiveOmit } from "@vueuse/core"
-import { SelectIcon, SelectTrigger, useForwardProps } from "reka-ui"
-import { cn } from "@/lib/utils"
-
-const props = withDefaults(
-  defineProps<SelectTriggerProps & { class?: HTMLAttributes["class"], size?: "sm" | "default" }>(),
-  { size: "default" },
-)
-
-const delegatedProps = reactiveOmit(props, "class", "size")
-const forwardedProps = useForwardProps(delegatedProps)
+<script setup>
+import { ChevronDown } from "@lucide/vue";
+import { reactiveOmit } from "@vueuse/core";
+import { SelectIcon, SelectTrigger, useForwardProps } from "reka-ui";
+import { cn } from "@/lib/utils";
+const props = defineProps({
+	disabled: {
+		type: Boolean,
+		required: false
+	},
+	reference: {
+		type: Object,
+		required: false
+	},
+	asChild: {
+		type: Boolean,
+		required: false
+	},
+	as: {
+		type: [
+			String,
+			Object,
+			Function
+		],
+		required: false
+	},
+	class: {
+		type: [
+			String,
+			Boolean,
+			Object,
+			Array
+		],
+		required: false
+	},
+	size: {
+		type: String,
+		required: false,
+		default: "default"
+	}
+});
+const delegatedProps = reactiveOmit(props, "class", "size");
+const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>

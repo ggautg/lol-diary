@@ -1,8 +1,19 @@
-<script setup lang="ts">
-import type { SelectItemTextProps } from "reka-ui"
-import { SelectItemText } from "reka-ui"
-
-const props = defineProps<SelectItemTextProps>()
+<script setup>
+import { SelectItemText } from "reka-ui";
+const props = defineProps({
+	asChild: {
+		type: Boolean,
+		required: false
+	},
+	as: {
+		type: [
+			String,
+			Object,
+			Function
+		],
+		required: false
+	}
+});
 </script>
 
 <template>

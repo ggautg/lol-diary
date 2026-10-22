@@ -36,7 +36,9 @@ function submit() {
                 required
                 placeholder="Tu nombre"
             />
-            <p v-if="form.errors.name" class="lol-error">{{ form.errors.name }}</p>
+            <p v-if="form.errors.name" class="lol-error">
+                {{ form.errors.name }}
+            </p>
         </div>
 
         <div class="lol-field">
@@ -50,7 +52,9 @@ function submit() {
                 required
                 placeholder="tu@email.com"
             />
-            <p v-if="form.errors.email" class="lol-error">{{ form.errors.email }}</p>
+            <p v-if="form.errors.email" class="lol-error">
+                {{ form.errors.email }}
+            </p>
         </div>
 
         <div class="lol-field">
@@ -63,11 +67,15 @@ function submit() {
                 autocomplete="new-password"
                 required
             />
-            <p v-if="form.errors.password" class="lol-error">{{ form.errors.password }}</p>
+            <p v-if="form.errors.password" class="lol-error">
+                {{ form.errors.password }}
+            </p>
         </div>
 
         <div class="lol-field">
-            <label class="lol-label" for="password_confirmation">Repite la contraseña</label>
+            <label class="lol-label" for="password_confirmation"
+                >Repite la contraseña</label
+            >
             <input
                 id="password_confirmation"
                 v-model="form.password_confirmation"
@@ -81,7 +89,11 @@ function submit() {
             </p>
         </div>
 
-        <button type="submit" class="lol-btn-primary" :disabled="form.processing">
+        <button
+            type="submit"
+            class="lol-btn-primary"
+            :disabled="form.processing"
+        >
             {{ form.processing ? 'Creando cuenta...' : 'Crear cuenta' }}
         </button>
     </form>

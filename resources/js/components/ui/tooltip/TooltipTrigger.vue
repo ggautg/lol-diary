@@ -1,8 +1,23 @@
-<script setup lang="ts">
-import type { TooltipTriggerProps } from "reka-ui"
-import { TooltipTrigger } from "reka-ui"
-
-const props = defineProps<TooltipTriggerProps>()
+<script setup>
+import { TooltipTrigger } from "reka-ui";
+const props = defineProps({
+	reference: {
+		type: Object,
+		required: false
+	},
+	asChild: {
+		type: Boolean,
+		required: false
+	},
+	as: {
+		type: [
+			String,
+			Object,
+			Function
+		],
+		required: false
+	}
+});
 </script>
 
 <template>

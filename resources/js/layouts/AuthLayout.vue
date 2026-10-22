@@ -1,10 +1,15 @@
-<script setup lang="ts">
+<script setup>
 import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue';
-
-const { title = '', description = '' } = defineProps<{
-    title?: string;
-    description?: string;
-}>();
+const { title = '', description = '' } = defineProps({
+    title: {
+        type: String,
+        required: false,
+    },
+    description: {
+        type: String,
+        required: false,
+    },
+});
 </script>
 
 <template>

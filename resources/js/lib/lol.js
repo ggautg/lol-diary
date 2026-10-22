@@ -22,7 +22,9 @@ export function kdaRatio(kills, deaths, assists) {
 }
 
 export function csPerMinute(cs, durationSeconds) {
-    return durationSeconds === 0 ? '0.0' : (cs / (durationSeconds / 60)).toFixed(1);
+    return durationSeconds === 0
+        ? '0.0'
+        : (cs / (durationSeconds / 60)).toFixed(1);
 }
 
 export function formatMatchDate(iso) {

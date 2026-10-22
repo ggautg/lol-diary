@@ -1,17 +1,74 @@
-<script setup lang="ts">
-import type { CheckboxRootEmits, CheckboxRootProps } from "reka-ui"
-import type { HTMLAttributes } from "vue"
-import { Check } from "@lucide/vue"
-import { reactiveOmit } from "@vueuse/core"
-import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from "reka-ui"
-import { cn } from "@/lib/utils"
-
-const props = defineProps<CheckboxRootProps & { class?: HTMLAttributes["class"] }>()
-const emits = defineEmits<CheckboxRootEmits>()
-
-const delegatedProps = reactiveOmit(props, "class")
-
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+<script setup>
+import { Check } from "@lucide/vue";
+import { reactiveOmit } from "@vueuse/core";
+import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from "reka-ui";
+import { cn } from "@/lib/utils";
+const props = defineProps({
+	defaultValue: {
+		type: [Boolean, String],
+		required: false
+	},
+	modelValue: {
+		type: [Boolean, String],
+		required: false
+	},
+	disabled: {
+		type: Boolean,
+		required: false
+	},
+	value: {
+		type: [
+			String,
+			Number,
+			Object
+		],
+		required: false
+	},
+	id: {
+		type: String,
+		required: false
+	},
+	trueValue: {
+		type: Boolean,
+		required: false
+	},
+	falseValue: {
+		type: Boolean,
+		required: false
+	},
+	asChild: {
+		type: Boolean,
+		required: false
+	},
+	as: {
+		type: [
+			String,
+			Object,
+			Function
+		],
+		required: false
+	},
+	name: {
+		type: String,
+		required: false
+	},
+	required: {
+		type: Boolean,
+		required: false
+	},
+	class: {
+		type: [
+			String,
+			Boolean,
+			Object,
+			Array
+		],
+		required: false
+	}
+});
+const emits = defineEmits(["update:modelValue"]);
+const delegatedProps = reactiveOmit(props, "class");
+const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>
