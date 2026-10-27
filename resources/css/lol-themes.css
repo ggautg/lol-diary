@@ -1,0 +1,534 @@
+/* ================= Themes =================
+   The active theme is set as data-theme on <html> (see useLolTheme.js).
+   Every block overrides the design tokens from lol-theme.css.
+   `dark` is the default palette already declared on :root, so the
+   selector below only makes the choice explicit. */
+
+/* ---------- Base ---------- */
+:root[data-theme='dark'] {
+    --lol-black: #010a13;
+    --lol-black-rgb: 1 10 19;
+    --lol-navy: #091428;
+    --lol-navy-rgb: 9 20 40;
+    --lol-panel: #1e2328;
+    --lol-panel-rgb: 30 35 40;
+    --lol-gold: #c8aa6e;
+    --lol-gold-rgb: 200 170 110;
+    --lol-gold-bright: #f0e6d2;
+    --lol-gold-deep: #c89b3c;
+    --lol-gold-dark: #785a28;
+    --lol-border-dim: #463714;
+    --lol-border-rgb: 70 55 20;
+    --lol-text: #a09b8c;
+    --lol-text-rgb: 160 155 140;
+    --lol-text-bright: #f0e6d2;
+    --lol-teal: #0ac8b9;
+    --lol-teal-rgb: 10 200 185;
+    --lol-win: #0ac8b9;
+    --lol-loss: #e84057;
+    --lol-loss-rgb: 232 64 87;
+    --lol-ink: #010a13;
+    --lol-scheme: dark;
+}
+
+/* Parchment & ink: the only light palette */
+:root[data-theme='light'] {
+    --lol-black: #f7f3e7;
+    --lol-black-rgb: 247 243 231;
+    --lol-navy: #efe7d3;
+    --lol-navy-rgb: 239 231 211;
+    --lol-panel: #fffdf6;
+    --lol-panel-rgb: 255 253 246;
+    --lol-gold: #856417;
+    --lol-gold-rgb: 133 100 23;
+    --lol-gold-bright: #3f2f08;
+    --lol-gold-deep: #b8912f;
+    --lol-gold-dark: #c0a45e;
+    --lol-border-dim: #d5c49c;
+    --lol-border-rgb: 213 196 156;
+    --lol-text: #5b5344;
+    --lol-text-rgb: 91 83 68;
+    --lol-text-bright: #201a10;
+    --lol-teal: #0a7f76;
+    --lol-teal-rgb: 10 127 118;
+    --lol-win: #0a8a7f;
+    --lol-loss: #b3243b;
+    --lol-loss-rgb: 179 36 59;
+    --lol-ink: #1b1405;
+    --lol-btn-top: #eeda9f;
+    --lol-btn-mid: #d9bc74;
+    --lol-btn-bottom: #c2a052;
+    --lol-shadow-rgb: 92 76 40;
+    --lol-scheme: light;
+}
+
+/* ---------- Regions of Runeterra ---------- */
+:root[data-theme='demacia'] {
+    --lol-black: #060b14;
+    --lol-black-rgb: 6 11 20;
+    --lol-navy: #0b1522;
+    --lol-navy-rgb: 11 21 34;
+    --lol-panel: #1a2330;
+    --lol-panel-rgb: 26 35 48;
+    --lol-gold: #e0c68a;
+    --lol-gold-rgb: 224 198 138;
+    --lol-gold-bright: #f6f0e2;
+    --lol-gold-deep: #c9a658;
+    --lol-gold-dark: #8d7440;
+    --lol-border-dim: #4a4128;
+    --lol-border-rgb: 74 65 40;
+    --lol-text: #a8adba;
+    --lol-text-rgb: 168 173 186;
+    --lol-text-bright: #f2f4f8;
+    --lol-teal: #6fa8dc;
+    --lol-teal-rgb: 111 168 220;
+    --lol-win: #4fc4a8;
+    --lol-loss: #d94f5c;
+    --lol-loss-rgb: 217 79 92;
+    --lol-ink: #060b14;
+}
+
+:root[data-theme='noxus'] {
+    --lol-black: #0b0507;
+    --lol-black-rgb: 11 5 7;
+    --lol-navy: #1a0a0e;
+    --lol-navy-rgb: 26 10 14;
+    --lol-panel: #241014;
+    --lol-panel-rgb: 36 16 20;
+    --lol-gold: #c99a5b;
+    --lol-gold-rgb: 201 154 91;
+    --lol-gold-bright: #f2ddc0;
+    --lol-gold-deep: #b0713a;
+    --lol-gold-dark: #7a4a26;
+    --lol-border-dim: #4a2418;
+    --lol-border-rgb: 74 36 24;
+    --lol-text: #b09a94;
+    --lol-text-rgb: 176 154 148;
+    --lol-text-bright: #f4e6de;
+    --lol-teal: #e8644a;
+    --lol-teal-rgb: 232 100 74;
+    --lol-win: #4fbf8f;
+    --lol-loss: #e84057;
+    --lol-loss-rgb: 232 64 87;
+    --lol-ink: #0b0507;
+}
+
+:root[data-theme='ionia'] {
+    --lol-black: #05100f;
+    --lol-black-rgb: 5 16 15;
+    --lol-navy: #0a1d1c;
+    --lol-navy-rgb: 10 29 28;
+    --lol-panel: #122a28;
+    --lol-panel-rgb: 18 42 40;
+    --lol-gold: #d9c08a;
+    --lol-gold-rgb: 217 192 138;
+    --lol-gold-bright: #f3ebd8;
+    --lol-gold-deep: #c09a4f;
+    --lol-gold-dark: #7d6a34;
+    --lol-border-dim: #2f463f;
+    --lol-border-rgb: 47 70 63;
+    --lol-text: #9fb5ae;
+    --lol-text-rgb: 159 181 174;
+    --lol-text-bright: #eef7f3;
+    --lol-teal: #f08fa8;
+    --lol-teal-rgb: 240 143 168;
+    --lol-win: #3fc9b0;
+    --lol-loss: #e8697f;
+    --lol-loss-rgb: 232 105 127;
+    --lol-ink: #05100f;
+}
+
+:root[data-theme='piltover'] {
+    --lol-black: #070d14;
+    --lol-black-rgb: 7 13 20;
+    --lol-navy: #0d1a26;
+    --lol-navy-rgb: 13 26 38;
+    --lol-panel: #152430;
+    --lol-panel-rgb: 21 36 48;
+    --lol-gold: #e2c07a;
+    --lol-gold-rgb: 226 192 122;
+    --lol-gold-bright: #f8f1e1;
+    --lol-gold-deep: #c9a34f;
+    --lol-gold-dark: #8a6f33;
+    --lol-border-dim: #3d4c56;
+    --lol-border-rgb: 61 76 86;
+    --lol-text: #a4b4c0;
+    --lol-text-rgb: 164 180 192;
+    --lol-text-bright: #f0f7fb;
+    --lol-teal: #5fc7e8;
+    --lol-teal-rgb: 95 199 232;
+    --lol-win: #35c4a8;
+    --lol-loss: #e8566b;
+    --lol-loss-rgb: 232 86 107;
+    --lol-ink: #070d14;
+}
+
+:root[data-theme='zaun'] {
+    --lol-black: #040d09;
+    --lol-black-rgb: 4 13 9;
+    --lol-navy: #08170f;
+    --lol-navy-rgb: 8 23 15;
+    --lol-panel: #0f2418;
+    --lol-panel-rgb: 15 36 24;
+    --lol-gold: #b8c46a;
+    --lol-gold-rgb: 184 196 106;
+    --lol-gold-bright: #eaf2c2;
+    --lol-gold-deep: #9aa845;
+    --lol-gold-dark: #5f6b2c;
+    --lol-border-dim: #2a3d24;
+    --lol-border-rgb: 42 61 36;
+    --lol-text: #9fb6a0;
+    --lol-text-rgb: 159 182 160;
+    --lol-text-bright: #e8f5e4;
+    --lol-teal: #7ce04f;
+    --lol-teal-rgb: 124 224 79;
+    --lol-win: #6fdc4f;
+    --lol-loss: #e0644f;
+    --lol-loss-rgb: 224 100 79;
+    --lol-ink: #040d09;
+}
+
+:root[data-theme='freljord'] {
+    --lol-black: #040b12;
+    --lol-black-rgb: 4 11 18;
+    --lol-navy: #08182a;
+    --lol-navy-rgb: 8 24 42;
+    --lol-panel: #0f2438;
+    --lol-panel-rgb: 15 36 56;
+    --lol-gold: #b9d2e0;
+    --lol-gold-rgb: 185 210 224;
+    --lol-gold-bright: #e9f6ff;
+    --lol-gold-deep: #8fb2c6;
+    --lol-gold-dark: #4e6a7d;
+    --lol-border-dim: #274656;
+    --lol-border-rgb: 39 70 86;
+    --lol-text: #9db6c6;
+    --lol-text-rgb: 157 182 198;
+    --lol-text-bright: #eaf7ff;
+    --lol-teal: #4fd8f0;
+    --lol-teal-rgb: 79 216 240;
+    --lol-win: #3fc9c0;
+    --lol-loss: #e0627a;
+    --lol-loss-rgb: 224 98 122;
+    --lol-ink: #040b12;
+}
+
+:root[data-theme='shurima'] {
+    --lol-black: #0e0803;
+    --lol-black-rgb: 14 8 3;
+    --lol-navy: #1b1105;
+    --lol-navy-rgb: 27 17 5;
+    --lol-panel: #26190a;
+    --lol-panel-rgb: 38 25 10;
+    --lol-gold: #d9ae5c;
+    --lol-gold-rgb: 217 174 92;
+    --lol-gold-bright: #f7e6bb;
+    --lol-gold-deep: #c1923b;
+    --lol-gold-dark: #8a6323;
+    --lol-border-dim: #4c3517;
+    --lol-border-rgb: 76 53 23;
+    --lol-text: #bfa782;
+    --lol-text-rgb: 191 167 130;
+    --lol-text-bright: #f8eed8;
+    --lol-teal: #e8b64f;
+    --lol-teal-rgb: 232 182 79;
+    --lol-win: #5fbf7f;
+    --lol-loss: #d9503f;
+    --lol-loss-rgb: 217 80 63;
+    --lol-ink: #0e0803;
+}
+
+:root[data-theme='targon'] {
+    --lol-black: #06060f;
+    --lol-black-rgb: 6 6 15;
+    --lol-navy: #101026;
+    --lol-navy-rgb: 16 16 38;
+    --lol-panel: #191a33;
+    --lol-panel-rgb: 25 26 51;
+    --lol-gold: #d9c48f;
+    --lol-gold-rgb: 217 196 143;
+    --lol-gold-bright: #f4ecd9;
+    --lol-gold-deep: #c2a55c;
+    --lol-gold-dark: #7f6c3a;
+    --lol-border-dim: #3a3560;
+    --lol-border-rgb: 58 53 96;
+    --lol-text: #a9a6c4;
+    --lol-text-rgb: 169 166 196;
+    --lol-text-bright: #f0edff;
+    --lol-teal: #a88bf0;
+    --lol-teal-rgb: 168 139 240;
+    --lol-win: #5fcfc0;
+    --lol-loss: #e0557a;
+    --lol-loss-rgb: 224 85 122;
+    --lol-ink: #06060f;
+}
+
+:root[data-theme='bilgewater'] {
+    --lol-black: #04100f;
+    --lol-black-rgb: 4 16 15;
+    --lol-navy: #0a1d1b;
+    --lol-navy-rgb: 10 29 27;
+    --lol-panel: #112824;
+    --lol-panel-rgb: 17 40 36;
+    --lol-gold: #c9a05c;
+    --lol-gold-rgb: 201 160 92;
+    --lol-gold-bright: #f1e2c1;
+    --lol-gold-deep: #a97f3c;
+    --lol-gold-dark: #6f5326;
+    --lol-border-dim: #33443a;
+    --lol-border-rgb: 51 68 58;
+    --lol-text: #9fb3a8;
+    --lol-text-rgb: 159 179 168;
+    --lol-text-bright: #eef5ee;
+    --lol-teal: #2fbfa8;
+    --lol-teal-rgb: 47 191 168;
+    --lol-win: #2fc9a8;
+    --lol-loss: #d9553f;
+    --lol-loss-rgb: 217 85 63;
+    --lol-ink: #04100f;
+}
+
+:root[data-theme='shadow-isles'] {
+    --lol-black: #030b08;
+    --lol-black-rgb: 3 11 8;
+    --lol-navy: #07160f;
+    --lol-navy-rgb: 7 22 15;
+    --lol-panel: #0d221a;
+    --lol-panel-rgb: 13 34 26;
+    --lol-gold: #a8d8b9;
+    --lol-gold-rgb: 168 216 185;
+    --lol-gold-bright: #e4ffe9;
+    --lol-gold-deep: #7fbf95;
+    --lol-gold-dark: #4a7a5c;
+    --lol-border-dim: #1f3a2c;
+    --lol-border-rgb: 31 58 44;
+    --lol-text: #93b4a2;
+    --lol-text-rgb: 147 180 162;
+    --lol-text-bright: #e6fff2;
+    --lol-teal: #5ff0a8;
+    --lol-teal-rgb: 95 240 168;
+    --lol-win: #5ff0a8;
+    --lol-loss: #d95f7a;
+    --lol-loss-rgb: 217 95 122;
+    --lol-ink: #030b08;
+}
+
+:root[data-theme='ixtal'] {
+    --lol-black: #04100a;
+    --lol-black-rgb: 4 16 10;
+    --lol-navy: #081d12;
+    --lol-navy-rgb: 8 29 18;
+    --lol-panel: #0f2a19;
+    --lol-panel-rgb: 15 42 25;
+    --lol-gold: #d6c07a;
+    --lol-gold-rgb: 214 192 122;
+    --lol-gold-bright: #f4edcd;
+    --lol-gold-deep: #b79c45;
+    --lol-gold-dark: #776630;
+    --lol-border-dim: #2b4426;
+    --lol-border-rgb: 43 68 38;
+    --lol-text: #a3b894;
+    --lol-text-rgb: 163 184 148;
+    --lol-text-bright: #eef6e2;
+    --lol-teal: #4fd8a0;
+    --lol-teal-rgb: 79 216 160;
+    --lol-win: #4fd8a0;
+    --lol-loss: #dd5f4f;
+    --lol-loss-rgb: 221 95 79;
+    --lol-ink: #04100a;
+}
+
+:root[data-theme='bandle-city'] {
+    --lol-black: #08100a;
+    --lol-black-rgb: 8 16 10;
+    --lol-navy: #101d12;
+    --lol-navy-rgb: 16 29 18;
+    --lol-panel: #1a2a1c;
+    --lol-panel-rgb: 26 42 28;
+    --lol-gold: #e2c76a;
+    --lol-gold-rgb: 226 199 106;
+    --lol-gold-bright: #fbf2c8;
+    --lol-gold-deep: #c9a83a;
+    --lol-gold-dark: #8a7222;
+    --lol-border-dim: #3a4a2a;
+    --lol-border-rgb: 58 74 42;
+    --lol-text: #aebca0;
+    --lol-text-rgb: 174 188 160;
+    --lol-text-bright: #f7fce8;
+    --lol-teal: #b07fe0;
+    --lol-teal-rgb: 176 127 224;
+    --lol-win: #68d06a;
+    --lol-loss: #e0618a;
+    --lol-loss-rgb: 224 97 138;
+    --lol-ink: #08100a;
+}
+
+:root[data-theme='void'] {
+    --lol-black: #06030f;
+    --lol-black-rgb: 6 3 15;
+    --lol-navy: #0d0620;
+    --lol-navy-rgb: 13 6 32;
+    --lol-panel: #160d2b;
+    --lol-panel-rgb: 22 13 43;
+    --lol-gold: #a98fd6;
+    --lol-gold-rgb: 169 143 214;
+    --lol-gold-bright: #e8deff;
+    --lol-gold-deep: #8a6fc4;
+    --lol-gold-dark: #543f80;
+    --lol-border-dim: #2c2050;
+    --lol-border-rgb: 44 32 80;
+    --lol-text: #a29ac0;
+    --lol-text-rgb: 162 154 192;
+    --lol-text-bright: #efeaff;
+    --lol-teal: #c46ff0;
+    --lol-teal-rgb: 196 111 240;
+    --lol-win: #4fd0a8;
+    --lol-loss: #e0509a;
+    --lol-loss-rgb: 224 80 154;
+    --lol-ink: #06030f;
+}
+
+/* ================= Theme switcher ================= */
+.lol-theme-menu {
+    position: relative;
+}
+
+.lol-theme-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+    background: transparent;
+    border: 1px solid var(--lol-gold-dark);
+    transition:
+        color 0.15s,
+        border-color 0.15s,
+        background 0.15s;
+}
+
+.lol-theme-trigger:hover,
+.lol-theme-trigger[aria-expanded='true'] {
+    color: var(--lol-gold-bright);
+    border-color: var(--lol-gold);
+    background: rgb(var(--lol-gold-rgb) / 0.08);
+}
+
+.lol-theme-trigger svg {
+    flex: none;
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.lol-theme-swatch {
+    flex: none;
+    width: 0.95rem;
+    height: 0.95rem;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--lol-shadow-rgb) / 0.45);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+}
+
+.lol-theme-trigger .lol-theme-swatch {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.lol-theme-panel {
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    right: 0;
+    z-index: 40;
+    width: min(21rem, calc(100vw - 2rem));
+    max-height: min(32rem, calc(100vh - 6rem));
+    overflow-y: auto;
+    padding: 0.9rem;
+    background: linear-gradient(
+        180deg,
+        rgb(var(--lol-panel-rgb) / 0.98),
+        rgb(var(--lol-navy-rgb) / 0.98)
+    );
+    border: 1px solid var(--lol-border-dim);
+    box-shadow:
+        0 0 0 1px rgb(var(--lol-gold-rgb) / 0.12),
+        0 18px 44px rgb(var(--lol-shadow-rgb) / 0.55);
+    scrollbar-color: var(--lol-gold-dark) transparent;
+    scrollbar-width: thin;
+}
+
+.lol-theme-group + .lol-theme-group {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgb(var(--lol-border-rgb) / 0.7);
+}
+
+.lol-theme-group-title {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lol-gold);
+}
+
+.lol-theme-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+.lol-theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+    padding: 0.35rem 0.45rem;
+    font-size: 0.78rem;
+    text-align: left;
+    color: var(--lol-text);
+    background: transparent;
+    border: 1px solid transparent;
+    transition:
+        color 0.15s,
+        border-color 0.15s,
+        background 0.15s;
+}
+
+.lol-theme-option:hover {
+    color: var(--lol-text-bright);
+    border-color: var(--lol-border-dim);
+    background: rgb(var(--lol-gold-rgb) / 0.07);
+}
+
+.lol-theme-option[aria-checked='true'] {
+    color: var(--lol-text-bright);
+    border-color: var(--lol-gold);
+    background: rgb(var(--lol-gold-rgb) / 0.1);
+}
+
+.lol-theme-option-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lol-theme-check {
+    flex: none;
+    width: 0.85rem;
+    height: 0.85rem;
+    margin-left: auto;
+    color: var(--lol-gold);
+}
+
+@media (max-width: 40rem) {
+    .lol-theme-trigger-label {
+        display: none;
+    }
+
+    .lol-theme-panel {
+        width: min(19rem, calc(100vw - 1.5rem));
+    }
+}

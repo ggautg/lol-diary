@@ -2,6 +2,7 @@
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { canInstall, promptInstall } from '@/lib/installPrompt';
+import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
 
 const page = usePage();
 
@@ -43,6 +44,7 @@ function logout() {
 
                 <div class="lol-user">
                     <span>{{ userName }}</span>
+                    <ThemeSwitcher />
                     <button
                         v-if="canInstall"
                         type="button"

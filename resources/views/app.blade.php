@@ -25,6 +25,24 @@
         })();
     </script>
 
+    {{-- Inline script to apply the saved LoL palette (light / dark / region) before first paint --}}
+    <script>
+        (function () {
+            const fallback = 'dark';
+            let theme = fallback;
+
+            try {
+                theme = window.localStorage.getItem('lol-theme') || fallback;
+            } catch (error) {
+                const match = document.cookie.match(/(?:^|;\s*)lol_theme=([^;]*)/);
+                theme = match ? decodeURIComponent(match[1]) : fallback;
+            }
+
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle('dark', theme !== 'light');
+        })();
+    </script>
+
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
     <style>
         html {
