@@ -26,7 +26,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Actualiza el nombre y el correo del usuario.
+     * Si el correo cambia, se marca como no verificado.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -38,13 +39,11 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
-
-        return to_route('profile.edit');
+        return to_route('profile.edit')->with('success', 'Perfil actualizado.');
     }
 
     /**
-     * Delete the user's profile.
+     * Elimina la cuenta del usuario y cierra la sesión.
      */
     public function destroy(ProfileDeleteRequest $request): RedirectResponse
     {

@@ -1,96 +1,98 @@
 <script setup>
+/**
+ * Formulario para crear una contraseña nueva desde el enlace del correo.
+ * El token y el correo viajan ocultos en el envío.
+ */
 import { Form, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 import { update } from '@/routes/password';
-defineOptions({
-    layout: {
-        title: 'Reset password',
-        description: 'Please enter your new password below',
-    },
-});
+
+defineOptions({ layout: LolAuthLayout });
+
 const props = defineProps({
-    token: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    passwordRules: {
-        type: String,
-        required: true,
-    },
+    token: { type: String, required: true },
+    email: { type: String, required: true },
+    passwordRules: { type: String, required: true },
 });
+
 const inputEmail = ref(props.email);
 </script>
 
 <template>
-    <Head title="Reset password" />
+    <Head title="Nueva contraseña" />
+
+    <p class="lol-auth-subtitle">Nueva contraseña</p>
+
+    <p class="mt-5 text-center text-sm">
+        Elige una contraseña nueva para tu cuenta.
+    </p>
 
     <Form
         v-bind="update.form()"
         :transform="(data) => ({ ...data, token, email })"
         :reset-on-success="['password', 'password_confirmation']"
+        class="mt-6 space-y-5"
         v-slot="{ errors, processing }"
     >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="email">Email</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    autocomplete="email"
-                    v-model="inputEmail"
-                    class="mt-1 block w-full"
-                    readonly
-                />
-                <InputError :message="errors.email" class="mt-2" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password">Password</Label>
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    autocomplete="new-password"
-                    class="mt-1 block w-full"
-                    autofocus
-                    placeholder="Password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password_confirmation"> Confirm password </Label>
-                <PasswordInput
-                    id="password_confirmation"
-                    name="password_confirmation"
-                    autocomplete="new-password"
-                    class="mt-1 block w-full"
-                    placeholder="Confirm password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password_confirmation" />
-            </div>
-
-            <Button
-                type="submit"
-                class="mt-4 w-full"
-                :disabled="processing"
-                data-test="reset-password-button"
-            >
-                <Spinner v-if="processing" />
-                Reset password
-            </Button>
+        <div class="lol-field">
+            <label class="lol-label" for="email">Correo electrónico</label>
+            <input
+                id="email"
+                v-model="inputEmail"
+                type="email"
+                name="email"
+                class="lol-input"
+                autocomplete="email"
+                readonly
+            />
+            <p v-if="errors.email" class="lol-error">{{ errors.email }}</p>
         </div>
+
+        <div class="lol-field">
+            <label class="lol-label" for="password">Contraseña nueva</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                class="lol-input"
+                autocomplete="new-password"
+                autofocus
+                required
+                placeholder="Nueva contraseña"
+                :passwordrules="passwordRules"
+            />
+            <p v-if="errors.password" class="lol-error">
+                {{ errors.password }}
+            </p>
+        </div>
+
+        <div class="lol-field">
+            <label class="lol-label" for="password_confirmation">
+                Repite la contraseña
+            </label>
+            <input
+                id="password_confirmation"
+                name="password_confirmation"
+                type="password"
+                class="lol-input"
+                autocomplete="new-password"
+                required
+                placeholder="Repite la contraseña"
+                :passwordrules="passwordRules"
+            />
+            <p v-if="errors.password_confirmation" class="lol-error">
+                {{ errors.password_confirmation }}
+            </p>
+        </div>
+
+        <button
+            type="submit"
+            class="lol-btn-primary"
+            :disabled="processing"
+            data-test="reset-password-button"
+        >
+            {{ processing ? 'Guardando...' : 'Guardar contraseña' }}
+        </button>
     </Form>
 </template>

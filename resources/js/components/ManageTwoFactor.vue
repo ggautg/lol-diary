@@ -1,86 +1,87 @@
 <script setup>
+/**
+ * Bloque de verificación en dos pasos (2FA) de los ajustes de seguridad.
+ * Permite activarla, continuar una configuración pendiente y desactivarla.
+ */
 import { Form } from '@inertiajs/vue3';
 import { ShieldCheck } from '@lucide/vue';
 import { onUnmounted, ref } from 'vue';
-import Heading from '@/components/Heading.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
-import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { disable, enable } from '@/routes/two-factor';
+
 defineProps({
-    canManageTwoFactor: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
-    requiresConfirmation: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
-    twoFactorEnabled: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
+    canManageTwoFactor: { type: Boolean, default: false },
+    requiresConfirmation: { type: Boolean, default: false },
+    twoFactorEnabled: { type: Boolean, default: false },
 });
+
 const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref(false);
+
 onUnmounted(() => clearTwoFactorAuthData());
 </script>
 
 <template>
-    <div v-if="canManageTwoFactor" class="space-y-6">
-        <Heading
-            variant="small"
-            title="Two-factor authentication"
-            description="Manage your two-factor authentication settings"
-        />
+    <div v-if="canManageTwoFactor" class="lol-settings-section">
+        <h2 class="lol-settings-heading">Verificación en dos pasos</h2>
+        <p class="lol-muted">
+            Añade un código temporal además de la contraseña para proteger la
+            cuenta.
+        </p>
 
-        <div
-            v-if="!twoFactorEnabled"
-            class="flex flex-col items-start justify-start space-y-4"
-        >
-            <p class="text-sm text-muted-foreground">
-                When you enable two-factor authentication, you will be prompted
-                for a secure pin during login. This pin can be retrieved from a
-                TOTP-supported application on your phone.
+        <div v-if="!twoFactorEnabled" class="lol-form">
+            <p>
+                Al activarla, se te pedirá un código de una aplicación de
+                autenticación (Google Authenticator, Authy, etc.) cada vez que
+                inicies sesión.
             </p>
 
-            <div>
-                <Button v-if="hasSetupData" @click="showSetupModal = true">
-                    <ShieldCheck />Continue setup
-                </Button>
+            <div class="lol-actions">
+                <button
+                    v-if="hasSetupData"
+                    type="button"
+                    class="lol-btn-primary lol-btn-inline"
+                    @click="showSetupModal = true"
+                >
+                    <ShieldCheck :size="14" />
+                    Continuar configuración
+                </button>
+
                 <Form
                     v-else
                     v-bind="enable.form()"
+                    class="lol-actions"
                     @success="showSetupModal = true"
-                    #default="{ processing }"
+                    v-slot="{ processing }"
                 >
-                    <Button type="submit" :disabled="processing">
-                        Enable 2FA
-                    </Button>
+                    <button
+                        type="submit"
+                        class="lol-btn-primary lol-btn-inline"
+                        :disabled="processing"
+                    >
+                        {{ processing ? 'Activando...' : 'Activar 2FA' }}
+                    </button>
                 </Form>
             </div>
         </div>
 
-        <div v-else class="flex flex-col items-start justify-start space-y-4">
-            <p class="text-sm text-muted-foreground">
-                You will be prompted for a secure, random pin during login,
-                which you can retrieve from the TOTP-supported application on
-                your phone.
+        <div v-else class="lol-form">
+            <p>
+                La verificación en dos pasos está activa. Al iniciar sesión se
+                te pedirá el código de tu aplicación de autenticación.
             </p>
 
-            <div class="relative inline">
-                <Form v-bind="disable.form()" #default="{ processing }">
-                    <Button
-                        variant="destructive"
+            <div class="lol-actions">
+                <Form v-bind="disable.form()" v-slot="{ processing }">
+                    <button
                         type="submit"
+                        class="lol-btn lol-btn--danger"
                         :disabled="processing"
                     >
-                        Disable 2FA
-                    </Button>
+                        {{ processing ? 'Desactivando...' : 'Desactivar 2FA' }}
+                    </button>
                 </Form>
             </div>
 
@@ -88,9 +89,9 @@ onUnmounted(() => clearTwoFactorAuthData());
         </div>
 
         <TwoFactorSetupModal
-            v-model:isOpen="showSetupModal"
-            :requiresConfirmation="requiresConfirmation"
-            :twoFactorEnabled="twoFactorEnabled"
+            v-model:is-open="showSetupModal"
+            :requires-confirmation="requiresConfirmation"
+            :two-factor-enabled="twoFactorEnabled"
         />
     </div>
 </template>

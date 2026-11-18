@@ -9,6 +9,7 @@ use Throwable;
 class DataDragon
 {
     private const CACHE_KEY = 'ddragon.version';
+
     private const UNAVAILABLE = 'unavailable';
 
     /**
@@ -23,10 +24,13 @@ class DataDragon
         }
 
         try {
-            $version = Http::timeout(3)
+            $versions = Http::timeout(3)
                 ->get('https://ddragon.leagueoflegends.com/api/versions.json')
                 ->throw()
-                ->json(0); // first element = newest version
+                ->json();
+
+            // El primer elemento de la lista es siempre la versión más reciente.
+            $version = is_array($versions) ? ($versions[0] ?? null) : null;
         } catch (Throwable) {
             $version = null;
         }

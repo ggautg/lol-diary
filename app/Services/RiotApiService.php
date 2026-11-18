@@ -10,6 +10,8 @@ class RiotApiService
 {
     /**
      * Resolve a Riot ID (name#tag) into account data, including the puuid.
+     *
+     * @return array<string, mixed>
      */
     public function getAccountByRiotId(string $gameName, string $tagLine, string $platform): array
     {
@@ -39,6 +41,8 @@ class RiotApiService
 
     /**
      * Get the full detail of a single match.
+     *
+     * @return array<string, mixed>
      */
     public function getMatch(string $matchId, string $platform): array
     {
@@ -60,13 +64,15 @@ class RiotApiService
     }
 
     /**
- * Get the current Riot ID of an account from its puuid.
- */
-public function getAccountByPuuid(string $puuid, string $platform): array
-{
-    return $this->client($platform)
-        ->get("/riot/account/v1/accounts/by-puuid/{$puuid}")
-        ->throw()
-        ->json();
-}
+     * Get the current Riot ID of an account from its puuid.
+     *
+     * @return array<string, mixed>
+     */
+    public function getAccountByPuuid(string $puuid, string $platform): array
+    {
+        return $this->client($platform)
+            ->get("/riot/account/v1/accounts/by-puuid/{$puuid}")
+            ->throw()
+            ->json();
+    }
 }

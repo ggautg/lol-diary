@@ -1,7 +1,16 @@
 <script setup>
+/**
+ * Análisis de falencias: diagnóstico general, prioridades de mejora,
+ * todas las áreas evaluadas, rendimiento por rol y fortalezas.
+ * El filtro de cuenta viaja en la URL igual que en Estadísticas.
+ */
 import { Head, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import AccountFilter from '@/components/lol/AccountFilter.vue';
+import PageHeader from '@/components/lol/PageHeader.vue';
+import StatStrip from '@/components/lol/StatStrip.vue';
 import DiaryLayout from '@/layouts/DiaryLayout.vue';
+import { formatNumber } from '@/lib/lol';
 
 defineOptions({ layout: DiaryLayout });
 
@@ -25,13 +34,6 @@ const selected = computed({
         );
     },
 });
-
-function formatNumber(value, decimals = 1) {
-    return Number(value).toLocaleString('es-PY', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-    });
-}
 
 function levelLabel(level) {
     return (
@@ -72,36 +74,46 @@ const remakeNote = computed(() => {
 
     return `${remakes} ${remakes === 1 ? 'remake excluido' : 'remakes excluidos'}`;
 });
+
+/** Cifras que resumen el diagnóstico en la franja superior. */
+const overview = computed(() => [
+    {
+        label: 'Partidas',
+        value: props.analysis.games,
+        small: true,
+    },
+    {
+        label: 'Winrate',
+        value: `${formatNumber(props.analysis.winrate, 1)}%`,
+        tone: props.analysis.winrate >= 50 ? 'win' : 'loss',
+        small: true,
+    },
+    {
+        label: 'Prioridades',
+        value: props.analysis.weaknesses.length,
+        small: true,
+    },
+    {
+        label: 'Fortalezas',
+        value: props.analysis.strengths.length,
+        tone: 'win',
+        small: true,
+    },
+]);
 </script>
 
 <template>
     <Head title="Falencias" />
 
     <div class="lol-container">
-        <div class="lol-toolbar">
-            <header>
-                <h1 class="lol-page-title">Falencias</h1>
-                <p class="lol-page-sub">
-                    Lo que tus partidas dicen que más te está costando, con
-                    objetivos claros para mejorar.
-                </p>
-            </header>
-
-            <select
-                v-model="selected"
-                class="lol-select"
-                aria-label="Filtrar por cuenta"
-            >
-                <option :value="null">Todas las cuentas</option>
-                <option
-                    v-for="account in accounts"
-                    :key="account.id"
-                    :value="account.id"
-                >
-                    {{ account.label }}
-                </option>
-            </select>
-        </div>
+        <PageHeader
+            title="Falencias"
+            subtitle="Lo que tus partidas dicen que más te está costando, con objetivos claros para mejorar."
+        >
+            <template #actions>
+                <AccountFilter v-model="selected" :accounts="accounts" />
+            </template>
+        </PageHeader>
 
         <div v-if="analysis.games === 0" class="lol-panel text-sm">
             Todavía no hay partidas suficientes para analizar tus falencias.
@@ -136,39 +148,7 @@ const remakeNote = computed(() => {
                             </template>
                         </p>
 
-                        <div class="lol-stats">
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Partidas</p>
-                                <p class="lol-stat-value">
-                                    {{ analysis.games }}
-                                </p>
-                            </div>
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Winrate</p>
-                                <p
-                                    class="lol-stat-value"
-                                    :class="
-                                        analysis.winrate >= 50
-                                            ? 'lol-win-text'
-                                            : 'lol-loss-text'
-                                    "
-                                >
-                                    {{ formatNumber(analysis.winrate, 1) }}%
-                                </p>
-                            </div>
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Prioridades</p>
-                                <p class="lol-stat-value">
-                                    {{ analysis.weaknesses.length }}
-                                </p>
-                            </div>
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Fortalezas</p>
-                                <p class="lol-stat-value lol-win-text">
-                                    {{ analysis.strengths.length }}
-                                </p>
-                            </div>
-                        </div>
+                        <StatStrip :stats="overview" />
                     </div>
                 </div>
             </section>

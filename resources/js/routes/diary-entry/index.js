@@ -1,7 +1,7 @@
 import { queryParams, applyUrlDefaults } from "./../../wayfinder";
 /**
 * @see \App\Http\Controllers\DiaryEntryController::update
-* @see app/Http/Controllers/DiaryEntryController.php:15
+* @see app/Http/Controllers/DiaryEntryController.php:24
 * @route '/matches/{lolMatch}/diary-entry'
 */
 export const update = (args, options) => ({
@@ -14,7 +14,7 @@ update.definition = {
 };
 /**
 * @see \App\Http\Controllers\DiaryEntryController::update
-* @see app/Http/Controllers/DiaryEntryController.php:15
+* @see app/Http/Controllers/DiaryEntryController.php:24
 * @route '/matches/{lolMatch}/diary-entry'
 */
 update.url = (args, options) => {
@@ -33,7 +33,7 @@ update.url = (args, options) => {
 };
 /**
 * @see \App\Http\Controllers\DiaryEntryController::update
-* @see app/Http/Controllers/DiaryEntryController.php:15
+* @see app/Http/Controllers/DiaryEntryController.php:24
 * @route '/matches/{lolMatch}/diary-entry'
 */
 update.put = (args, options) => ({
@@ -42,7 +42,7 @@ update.put = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\DiaryEntryController::update
-* @see app/Http/Controllers/DiaryEntryController.php:15
+* @see app/Http/Controllers/DiaryEntryController.php:24
 * @route '/matches/{lolMatch}/diary-entry'
 */
 const updateForm = (args, options) => ({
@@ -54,7 +54,7 @@ const updateForm = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\DiaryEntryController::update
-* @see app/Http/Controllers/DiaryEntryController.php:15
+* @see app/Http/Controllers/DiaryEntryController.php:24
 * @route '/matches/{lolMatch}/diary-entry'
 */
 updateForm.put = (args, options) => ({

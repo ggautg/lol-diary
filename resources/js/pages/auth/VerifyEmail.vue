@@ -1,48 +1,51 @@
 <script setup>
-import { Form, Head } from '@inertiajs/vue3';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+/**
+ * Aviso de verificación de correo: reenvía el enlace o cierra la sesión.
+ */
+import { Form, Head, Link } from '@inertiajs/vue3';
+import LolAuthLayout from '@/layouts/LolAuthLayout.vue';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
-defineOptions({
-    layout: {
-        title: 'Email verification',
-        description:
-            'Please verify your email address by clicking on the link we just emailed to you.',
-    },
-});
+
+defineOptions({ layout: LolAuthLayout });
+
 defineProps({
-    status: {
-        type: String,
-        required: false,
-    },
+    status: { type: String, default: undefined },
 });
 </script>
 
 <template>
-    <Head title="Email verification" />
+    <Head title="Verifica tu correo" />
 
-    <div
+    <p class="lol-auth-subtitle">Verifica tu correo</p>
+
+    <p class="mt-5 text-center text-sm">
+        Te enviamos un enlace de verificación. Ábrelo para activar tu cuenta.
+    </p>
+
+    <p
         v-if="status === 'verification-link-sent'"
-        class="mb-4 text-center text-sm font-medium text-green-600"
+        class="lol-notice mt-5"
+        role="status"
     >
-        A new verification link has been sent to the email address you provided
-        during registration.
-    </div>
+        Te enviamos un enlace nuevo al correo con el que te registraste.
+    </p>
 
     <Form
         v-bind="send.form()"
-        class="space-y-6 text-center"
+        class="mt-6 space-y-5 text-center"
         v-slot="{ processing }"
     >
-        <Button :disabled="processing" variant="secondary">
-            <Spinner v-if="processing" />
-            Resend verification email
-        </Button>
+        <button
+            type="submit"
+            class="lol-btn-primary"
+            :disabled="processing"
+        >
+            {{ processing ? 'Enviando...' : 'Reenviar enlace' }}
+        </button>
 
-        <TextLink :href="logout()" as="button" class="mx-auto block text-sm">
-            Log out
-        </TextLink>
+        <Link :href="logout()" method="post" as="button" class="lol-link block text-sm">
+            Cerrar sesión
+        </Link>
     </Form>
 </template>

@@ -1,7 +1,7 @@
 import { queryParams } from "./../../../../wayfinder";
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 export const index = (options) => ({
@@ -14,7 +14,7 @@ index.definition = {
 };
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 index.url = (options) => {
@@ -22,7 +22,7 @@ index.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 index.get = (options) => ({
@@ -31,7 +31,7 @@ index.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 index.head = (options) => ({
@@ -40,7 +40,7 @@ index.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 const indexForm = (options) => ({
@@ -49,7 +49,7 @@ const indexForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 indexForm.get = (options) => ({
@@ -58,7 +58,7 @@ indexForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::index
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 indexForm.head = (options) => ({

@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\DB;
 class StatsService
 {
     /**
-     * Everything the dashboard needs, in one call.
+     * Todo lo que necesita el panel de estadísticas, en una sola llamada.
+     *
+     * @return array<string, mixed>
      */
     public function dashboard(User $user, ?int $accountId = null): array
     {
@@ -24,18 +26,30 @@ class StatsService
         ];
     }
 
+    /**
+     * Resumen global: partidas jugadas, victorias, derrotas y winrate.
+     *
+     * @return array{games: int, wins: int, losses: int, winrate: float}
+     */
     public function overview(User $user, ?int $accountId = null): array
     {
-        $row = $this->baseQuery($user, $accountId)
+        $row = (array) $this->baseQuery($user, $accountId)
+            ->toBase()
             ->selectRaw('COUNT(*) as games, COALESCE(SUM(lol_matches.win), 0) as wins')
             ->first();
 
-        return $this->winrate((int) $row->games, (int) $row->wins);
+        return $this->winrate((int) ($row['games'] ?? 0), (int) ($row['wins'] ?? 0));
     }
 
+    /**
+     * Rendimiento agrupado por campeón.
+     *
+     * @return Collection<int, array{champion: mixed, games: int, wins: int, losses: int, winrate: float, kda: float, avg_damage: int}>
+     */
     public function byChampion(User $user, ?int $accountId = null): Collection
     {
         return $this->baseQuery($user, $accountId)
+            ->toBase()
             ->selectRaw('
                 lol_matches.champion as champion,
                 COUNT(*) as games,
@@ -49,17 +63,27 @@ class StatsService
             ->orderByDesc('games')
             ->orderBy('champion')
             ->get()
-            ->map(fn ($row) => [
-                'champion' => $row->champion,
-                ...$this->winrate((int) $row->games, (int) $row->wins),
-                'kda' => round(($row->total_kills + $row->total_assists) / max($row->total_deaths, 1), 2),
-                'avg_damage' => (int) round($row->avg_damage),
-            ]);
+            ->map(function (object $row): array {
+                $row = (array) $row;
+
+                return [
+                    'champion' => $row['champion'],
+                    ...$this->winrate((int) $row['games'], (int) $row['wins']),
+                    'kda' => round(($row['total_kills'] + $row['total_assists']) / max($row['total_deaths'], 1), 2),
+                    'avg_damage' => (int) round($row['avg_damage']),
+                ];
+            });
     }
 
+    /**
+     * Rendimiento agrupado por estado de ánimo.
+     *
+     * @return Collection<int, array{mood: mixed, games: int, wins: int, losses: int, winrate: float}>
+     */
     public function byMood(User $user, ?int $accountId = null): Collection
     {
         return $this->baseQuery($user, $accountId)
+            ->toBase()
             ->join('diary_entries', 'diary_entries.lol_match_id', '=', 'lol_matches.id')
             ->whereNotNull('diary_entries.mood')
             ->selectRaw('
@@ -70,14 +94,23 @@ class StatsService
             ->groupBy('diary_entries.mood')
             ->orderByDesc('games')
             ->get()
-            ->map(fn ($row) => [
-                'mood' => $row->mood,
-                ...$this->winrate((int) $row->games, (int) $row->wins),
-            ]);
+            ->map(function (object $row): array {
+                $row = (array) $row;
+
+                return [
+                    'mood' => $row['mood'],
+                    ...$this->winrate((int) $row['games'], (int) $row['wins']),
+                ];
+            });
     }
 
     /**
-     * Grouped in PHP on purpose: see the notes below.
+     * Rendimiento por hora local del día.
+     *
+     * Se agrupa en PHP a propósito: la hora depende de la zona horaria
+     * configurada y no conviene depender de las funciones de MySQL.
+     *
+     * @return Collection<int, array{hour: int, games: int, wins: int, losses: int, winrate: float}>
      */
     public function byHour(User $user, ?int $accountId = null): Collection
     {
@@ -94,6 +127,11 @@ class StatsService
             ->values();
     }
 
+    /**
+     * Rendimiento agrupado por etiqueta del diario.
+     *
+     * @return Collection<int, array{name: mixed, games: int, wins: int, losses: int, winrate: float}>
+     */
     public function byTag(User $user, ?int $accountId = null): Collection
     {
         return DB::table('tags')
@@ -107,14 +145,20 @@ class StatsService
             ->orderByDesc('games')
             ->orderBy('tags.name')
             ->get()
-            ->map(fn ($row) => [
-                'name' => $row->name,
-                ...$this->winrate((int) $row->games, (int) $row->wins),
-            ]);
+            ->map(function (object $row): array {
+                $row = (array) $row;
+
+                return [
+                    'name' => $row['name'],
+                    ...$this->winrate((int) $row['games'], (int) $row['wins']),
+                ];
+            });
     }
 
     /**
-     * Only matches of the user's own accounts, optionally narrowed to one.
+     * Solo partidas de las cuentas del propio usuario, opcionalmente una sola.
+     *
+     * @return Builder<LolMatch>
      */
     private function baseQuery(User $user, ?int $accountId): Builder
     {
@@ -128,6 +172,11 @@ class StatsService
         return $query;
     }
 
+    /**
+     * Calcula las métricas derivadas a partir de partidas y victorias.
+     *
+     * @return array{games: int, wins: int, losses: int, winrate: float}
+     */
     private function winrate(int $games, int $wins): array
     {
         return [

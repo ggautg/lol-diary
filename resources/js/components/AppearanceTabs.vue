@@ -1,43 +1,68 @@
 <script setup>
-import { Monitor, Moon, Sun } from '@lucide/vue';
-import { useAppearance } from '@/composables/useAppearance';
-const { appearance, updateAppearance } = useAppearance();
-const tabs = [
+/**
+ * Selector de paleta del diario.
+ * Las paletas se agrupan en básicas (claro/oscuro) y regionales de
+ * Runaterra; la elegida se guarda en el navegador y repinta toda la app.
+ */
+import { Check } from 'lucide-vue-next';
+import { computed } from 'vue';
+import { useLolTheme } from '@/composables/useLolTheme';
+
+const { themes, theme, setTheme } = useLolTheme();
+
+const groups = computed(() => [
     {
-        value: 'light',
-        Icon: Sun,
-        label: 'Light',
+        title: 'Básicos',
+        items: themes.filter((item) => item.group === 'base'),
     },
     {
-        value: 'dark',
-        Icon: Moon,
-        label: 'Dark',
+        title: 'Regiones de Runaterra',
+        items: themes.filter((item) => item.group === 'region'),
     },
-    {
-        value: 'system',
-        Icon: Monitor,
-        label: 'System',
-    },
-];
+]);
+
+/** Vista previa: mitad fondo de página, mitad color de acento. */
+function swatch(item) {
+    return {
+        background: `linear-gradient(135deg, ${item.swatch} 0 52%, ${item.accent} 52% 100%)`,
+    };
+}
 </script>
 
 <template>
-    <div
-        class="inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800"
-    >
-        <button
-            v-for="{ value, Icon, label } in tabs"
-            :key="value"
-            @click="updateAppearance(value)"
-            :class="[
-                'flex items-center rounded-md px-3.5 py-1.5 transition-colors',
-                appearance === value
-                    ? 'bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100'
-                    : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
-            ]"
+    <div class="lol-form">
+        <div
+            v-for="group in groups"
+            :key="group.title"
+            class="lol-settings-group"
         >
-            <component :is="Icon" class="-ml-1 h-4 w-4" />
-            <span class="ml-1.5 text-sm">{{ label }}</span>
-        </button>
+            <p class="lol-label">{{ group.title }}</p>
+
+            <div class="lol-theme-grid">
+                <button
+                    v-for="item in group.items"
+                    :key="item.id"
+                    type="button"
+                    role="menuitemradio"
+                    :aria-checked="theme === item.id"
+                    class="lol-theme-option"
+                    @click="setTheme(item.id)"
+                >
+                    <span
+                        class="lol-theme-swatch"
+                        :style="swatch(item)"
+                        aria-hidden="true"
+                    />
+                    <span class="lol-theme-option-label">
+                        {{ item.label }}
+                    </span>
+                    <Check
+                        v-if="theme === item.id"
+                        class="lol-theme-check"
+                        aria-hidden="true"
+                    />
+                </button>
+            </div>
+        </div>
     </div>
 </template>

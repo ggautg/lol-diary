@@ -1,135 +1,117 @@
 <script setup>
+/**
+ * Ajustes de seguridad: cambio de contraseña, verificación en dos pasos
+ * y passkeys. Cada bloque se oculta si la función no está disponible.
+ */
 import { Form, Head } from '@inertiajs/vue3';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/Heading.vue';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/security';
 import ManagePasskeys from '@/components/ManagePasskeys.vue';
 import ManageTwoFactor from '@/components/ManageTwoFactor.vue';
+
 const props = defineProps({
-    passwordRules: {
-        type: String,
-        required: true,
-    },
-    canManagePasskeys: {
-        type: Boolean,
-        required: false,
-    },
-    passkeys: {
-        type: Array,
-        required: false,
-    },
-    canManageTwoFactor: {
-        type: Boolean,
-        required: false,
-    },
-    requiresConfirmation: {
-        type: Boolean,
-        required: false,
-    },
-    twoFactorEnabled: {
-        type: Boolean,
-        required: false,
-    },
-});
-defineOptions({
-    layout: {
-        breadcrumbs: [
-            {
-                title: 'Security settings',
-                href: edit(),
-            },
-        ],
-    },
+    passwordRules: { type: String, required: true },
+    canManagePasskeys: { type: Boolean, default: false },
+    passkeys: { type: Array, default: () => [] },
+    canManageTwoFactor: { type: Boolean, default: false },
+    requiresConfirmation: { type: Boolean, default: false },
+    twoFactorEnabled: { type: Boolean, default: false },
 });
 </script>
 
 <template>
-    <Head title="Security settings" />
+    <Head title="Seguridad" />
 
-    <h1 class="sr-only">Security settings</h1>
-
-    <div class="space-y-6">
-        <Heading
-            variant="small"
-            title="Update password"
-            description="Ensure your account is using a long, random password to stay secure"
-        />
+    <div class="lol-settings-section">
+        <h2 class="lol-settings-heading">Cambiar contraseña</h2>
+        <p class="lol-muted">
+            Usa una contraseña larga y difícil de adivinar para mantener la
+            cuenta segura.
+        </p>
 
         <Form
             v-bind="SecurityController.update.form()"
-            :options="{
-                preserveScroll: true,
-            }"
+            :options="{ preserveScroll: true }"
             reset-on-success
             :reset-on-error="[
                 'password',
                 'password_confirmation',
                 'current_password',
             ]"
-            class="space-y-6"
+            class="lol-form"
             v-slot="{ errors, processing }"
         >
-            <div class="grid gap-2">
-                <Label for="current_password">Current password</Label>
-                <PasswordInput
+            <div class="lol-field">
+                <label class="lol-label" for="current_password">
+                    Contraseña actual
+                </label>
+                <input
                     id="current_password"
                     name="current_password"
-                    class="mt-1 block w-full"
+                    type="password"
+                    class="lol-input"
                     autocomplete="current-password"
-                    placeholder="Current password"
+                    placeholder="Tu contraseña actual"
                 />
-                <InputError :message="errors.current_password" />
+                <p v-if="errors.current_password" class="lol-error">
+                    {{ errors.current_password }}
+                </p>
             </div>
 
-            <div class="grid gap-2">
-                <Label for="password">New password</Label>
-                <PasswordInput
+            <div class="lol-field">
+                <label class="lol-label" for="password">Contraseña nueva</label>
+                <input
                     id="password"
                     name="password"
-                    class="mt-1 block w-full"
+                    type="password"
+                    class="lol-input"
                     autocomplete="new-password"
-                    placeholder="New password"
+                    placeholder="Nueva contraseña"
                     :passwordrules="props.passwordRules"
                 />
-                <InputError :message="errors.password" />
+                <p v-if="errors.password" class="lol-error">
+                    {{ errors.password }}
+                </p>
             </div>
 
-            <div class="grid gap-2">
-                <Label for="password_confirmation">Confirm password</Label>
-                <PasswordInput
+            <div class="lol-field">
+                <label class="lol-label" for="password_confirmation">
+                    Repite la contraseña nueva
+                </label>
+                <input
                     id="password_confirmation"
                     name="password_confirmation"
-                    class="mt-1 block w-full"
+                    type="password"
+                    class="lol-input"
                     autocomplete="new-password"
-                    placeholder="Confirm password"
+                    placeholder="Repite la contraseña"
                     :passwordrules="props.passwordRules"
                 />
-                <InputError :message="errors.password_confirmation" />
+                <p v-if="errors.password_confirmation" class="lol-error">
+                    {{ errors.password_confirmation }}
+                </p>
             </div>
 
-            <div class="flex items-center gap-4">
-                <Button
+            <div class="lol-actions">
+                <button
+                    type="submit"
+                    class="lol-btn-primary lol-btn-inline"
                     :disabled="processing"
                     data-test="update-password-button"
                 >
-                    Save
-                </Button>
+                    {{ processing ? 'Guardando...' : 'Guardar contraseña' }}
+                </button>
             </div>
         </Form>
     </div>
 
     <ManageTwoFactor
-        :canManageTwoFactor="canManageTwoFactor"
-        :requiresConfirmation="requiresConfirmation"
-        :twoFactorEnabled="twoFactorEnabled"
+        :can-manage-two-factor="canManageTwoFactor"
+        :requires-confirmation="requiresConfirmation"
+        :two-factor-enabled="twoFactorEnabled"
     />
 
     <ManagePasskeys
-        :canManagePasskeys="canManagePasskeys"
+        :can-manage-passkeys="canManagePasskeys"
         :passkeys="passkeys"
     />
 </template>

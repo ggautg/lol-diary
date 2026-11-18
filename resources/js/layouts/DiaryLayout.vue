@@ -1,20 +1,25 @@
 <script setup>
+/**
+ * Estructura común de todas las pantallas autenticadas: cabecera con
+ * navegación principal, contenido y aviso legal de Riot.
+ */
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { canInstall, promptInstall } from '@/lib/installPrompt';
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
+import { canInstall, promptInstall } from '@/lib/installPrompt';
 
 const page = usePage();
 
 const items = [
+    { label: 'Partidas', href: '/diary' },
     { label: 'Calendario', href: '/diary/calendar' },
     { label: 'Estadísticas', href: '/diary/stats' },
     { label: 'Falencias', href: '/diary/weaknesses' },
-    { label: 'Partidas', href: '/diary' },
     { label: 'Cuentas', href: '/diary/accounts' },
+    { label: 'Ajustes', href: '/settings/profile' },
 ];
 
-// page.url includes the query string (?month=...), so compare only the path
+// page.url incluye la cadena de consulta (?month=...): comparamos solo la ruta.
 const currentPath = computed(() => page.url.split('?')[0]);
 
 const userName = computed(() => page.props.auth?.user?.name ?? '');
@@ -23,6 +28,7 @@ function logout() {
     router.post('/logout');
 }
 </script>
+
 <template>
     <div class="lol-app">
         <header class="lol-header">
@@ -62,11 +68,11 @@ function logout() {
         </main>
 
         <footer class="lol-footer">
-            LoL Diary isn't endorsed by Riot Games and doesn't reflect the views
-            or opinions of Riot Games or anyone officially involved in producing
-            or managing Riot Games properties. Riot Games, and all associated
-            properties are trademarks or registered trademarks of Riot Games,
-            Inc.
+            LoL Diary no está avalado por Riot Games ni refleja las opiniones de
+            Riot Games o de cualquier persona involucrada en la producción o
+            gestión de las propiedades de Riot Games. Riot Games y todas sus
+            propiedades asociadas son marcas comerciales o marcas registradas
+            de Riot Games, Inc.
         </footer>
     </div>
 </template>

@@ -15,7 +15,7 @@ export const useTwoFactorAuth = () => {
             const { svg } = await http.submit(qrCode());
             qrCodeSvg.value = svg;
         } catch {
-            errors.value.push('Failed to fetch QR code');
+            errors.value.push('No se pudo cargar el código QR');
             qrCodeSvg.value = null;
         }
     };
@@ -24,7 +24,7 @@ export const useTwoFactorAuth = () => {
             const { secretKey: key } = await http.submit(secretKey());
             manualSetupKey.value = key;
         } catch {
-            errors.value.push('Failed to fetch a setup key');
+            errors.value.push('No se pudo cargar la clave de configuración');
             manualSetupKey.value = null;
         }
     };
@@ -46,7 +46,7 @@ export const useTwoFactorAuth = () => {
             clearErrors();
             recoveryCodesList.value = await http.submit(recoveryCodes());
         } catch {
-            errors.value.push('Failed to fetch recovery codes');
+            errors.value.push('No se pudieron cargar los códigos de recuperación');
             recoveryCodesList.value = [];
         }
     };

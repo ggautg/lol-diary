@@ -1,29 +1,19 @@
 <script setup>
+/**
+ * Botón para confirmar la contraseña con una passkey.
+ * Si el navegador no la admite no se muestra nada: queda el formulario.
+ */
 import { router } from '@inertiajs/vue3';
 import { usePasskeyVerify } from '@laravel/passkeys/vue';
 import { KeyRound } from '@lucide/vue';
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Spinner } from '@/components/ui/spinner';
+
 const props = defineProps({
-    routes: {
-        type: Object,
-        required: false,
-    },
-    label: {
-        type: String,
-        required: false,
-    },
-    loadingLabel: {
-        type: String,
-        required: false,
-    },
-    separator: {
-        type: String,
-        required: false,
-    },
+    routes: { type: Object, default: null },
+    label: { type: String, default: 'Entrar con una passkey' },
+    loadingLabel: { type: String, default: 'Autenticando...' },
+    separator: { type: String, default: 'O continúa con tu contraseña' },
 });
+
 const { verify, isLoading, error, isSupported } = usePasskeyVerify({
     ...(props.routes
         ? {
@@ -34,44 +24,31 @@ const { verify, isLoading, error, isSupported } = usePasskeyVerify({
           }
         : {}),
     onSuccess: (response) => {
-        router.visit(response.redirect ?? '/dashboard');
+        router.visit(response.redirect ?? '/diary');
     },
 });
 </script>
 
 <template>
     <div v-if="isSupported">
-        <div class="grid gap-2">
-            <Button
-                type="button"
-                variant="outline"
-                class="w-full"
-                @click="verify"
-                :disabled="isLoading"
-            >
-                <Spinner v-if="isLoading" />
-                <KeyRound v-else class="h-4 w-4" />
-                {{
-                    isLoading
-                        ? (props.loadingLabel ?? 'Authenticating...')
-                        : (props.label ?? 'Sign in with a passkey')
-                }}
-            </Button>
+        <button
+            type="button"
+            class="lol-btn-primary"
+            :disabled="isLoading"
+            @click="verify"
+        >
+            <KeyRound v-if="!isLoading" class="h-4 w-4" />
+            {{ isLoading ? loadingLabel : label }}
+        </button>
 
-            <div v-if="error" class="text-center">
-                <InputError :message="error" />
-            </div>
-        </div>
+        <p v-if="error" class="lol-error mt-2 text-center">{{ error }}</p>
 
-        <div class="relative my-6">
-            <div class="absolute inset-0 flex items-center">
-                <Separator class="w-full" />
-            </div>
-            <div class="relative flex justify-center text-xs uppercase">
-                <span class="bg-background px-2 text-muted-foreground">
-                    {{ props.separator ?? 'Or continue with email' }}
-                </span>
-            </div>
+        <div class="my-5 flex items-center gap-3" aria-hidden="true">
+            <span class="h-px flex-1 bg-[var(--lol-border-dim)]" />
+            <span class="text-xs uppercase tracking-wider opacity-70">
+                {{ separator }}
+            </span>
+            <span class="h-px flex-1 bg-[var(--lol-border-dim)]" />
         </div>
     </div>
 </template>

@@ -1,7 +1,7 @@
 import { queryParams } from "./../../wayfinder";
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 export const index = (options) => ({
@@ -14,7 +14,7 @@ index.definition = {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 index.url = (options) => {
@@ -22,7 +22,7 @@ index.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 index.get = (options) => ({
@@ -31,7 +31,7 @@ index.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 index.head = (options) => ({
@@ -40,7 +40,7 @@ index.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 const indexForm = (options) => ({
@@ -49,7 +49,7 @@ const indexForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 indexForm.get = (options) => ({
@@ -58,7 +58,7 @@ indexForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 indexForm.head = (options) => ({
@@ -71,7 +71,7 @@ indexForm.head = (options) => ({
 index.form = indexForm;
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 export const calendar = (options) => ({
@@ -84,7 +84,7 @@ calendar.definition = {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendar.url = (options) => {
@@ -92,7 +92,7 @@ calendar.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendar.get = (options) => ({
@@ -101,7 +101,7 @@ calendar.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendar.head = (options) => ({
@@ -110,7 +110,7 @@ calendar.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 const calendarForm = (options) => ({
@@ -119,7 +119,7 @@ const calendarForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendarForm.get = (options) => ({
@@ -128,7 +128,7 @@ calendarForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendarForm.head = (options) => ({
@@ -141,7 +141,7 @@ calendarForm.head = (options) => ({
 calendar.form = calendarForm;
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 export const stats = (options) => ({
@@ -154,7 +154,7 @@ stats.definition = {
 };
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 stats.url = (options) => {
@@ -162,7 +162,7 @@ stats.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 stats.get = (options) => ({
@@ -171,7 +171,7 @@ stats.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 stats.head = (options) => ({
@@ -180,7 +180,7 @@ stats.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 const statsForm = (options) => ({
@@ -189,7 +189,7 @@ const statsForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 statsForm.get = (options) => ({
@@ -198,7 +198,7 @@ statsForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::stats
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 statsForm.head = (options) => ({
@@ -211,7 +211,7 @@ statsForm.head = (options) => ({
 stats.form = statsForm;
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 export const weaknesses = (options) => ({
@@ -224,7 +224,7 @@ weaknesses.definition = {
 };
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 weaknesses.url = (options) => {
@@ -232,7 +232,7 @@ weaknesses.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 weaknesses.get = (options) => ({
@@ -241,7 +241,7 @@ weaknesses.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 weaknesses.head = (options) => ({
@@ -250,7 +250,7 @@ weaknesses.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 const weaknessesForm = (options) => ({
@@ -259,7 +259,7 @@ const weaknessesForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 weaknessesForm.get = (options) => ({
@@ -268,7 +268,7 @@ weaknessesForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\WeaknessController::weaknesses
-* @see app/Http/Controllers/WeaknessController.php:13
+* @see app/Http/Controllers/WeaknessController.php:19
 * @route '/diary/weaknesses'
 */
 weaknessesForm.head = (options) => ({
@@ -281,7 +281,7 @@ weaknessesForm.head = (options) => ({
 weaknesses.form = weaknessesForm;
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 export const accounts = (options) => ({
@@ -294,7 +294,7 @@ accounts.definition = {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 accounts.url = (options) => {
@@ -302,7 +302,7 @@ accounts.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 accounts.get = (options) => ({
@@ -311,7 +311,7 @@ accounts.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 accounts.head = (options) => ({
@@ -320,7 +320,7 @@ accounts.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 const accountsForm = (options) => ({
@@ -329,7 +329,7 @@ const accountsForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 accountsForm.get = (options) => ({
@@ -338,7 +338,7 @@ accountsForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::accounts
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 accountsForm.head = (options) => ({

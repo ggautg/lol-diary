@@ -42,7 +42,7 @@ function submit() {
         </div>
 
         <div class="lol-field">
-            <label class="lol-label" for="email">Email</label>
+            <label class="lol-label" for="email">Correo electrónico</label>
             <input
                 id="email"
                 v-model="form.email"

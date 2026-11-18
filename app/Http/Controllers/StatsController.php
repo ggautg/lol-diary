@@ -8,8 +8,14 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * Estadísticas del diario: winrate por hora, ánimo, campeón y etiqueta.
+ */
 class StatsController extends Controller
 {
+    /**
+     * Muestra el panel de estadísticas, opcionalmente filtrado por cuenta.
+     */
     public function index(Request $request, StatsService $stats): Response
     {
         $data = $request->validate([

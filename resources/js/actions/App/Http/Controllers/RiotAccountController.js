@@ -1,7 +1,7 @@
 import { queryParams, applyUrlDefaults } from "./../../../../wayfinder";
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 export const index = (options) => ({
@@ -14,7 +14,7 @@ index.definition = {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 index.url = (options) => {
@@ -22,7 +22,7 @@ index.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 index.get = (options) => ({
@@ -31,7 +31,7 @@ index.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 index.head = (options) => ({
@@ -40,7 +40,7 @@ index.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 const indexForm = (options) => ({
@@ -49,7 +49,7 @@ const indexForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 indexForm.get = (options) => ({
@@ -58,7 +58,7 @@ indexForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::index
-* @see app/Http/Controllers/RiotAccountController.php:22
+* @see app/Http/Controllers/RiotAccountController.php:32
 * @route '/diary/accounts'
 */
 indexForm.head = (options) => ({
@@ -71,7 +71,7 @@ indexForm.head = (options) => ({
 index.form = indexForm;
 /**
 * @see \App\Http\Controllers\RiotAccountController::store
-* @see app/Http/Controllers/RiotAccountController.php:49
+* @see app/Http/Controllers/RiotAccountController.php:62
 * @route '/riot-accounts'
 */
 export const store = (options) => ({
@@ -84,7 +84,7 @@ store.definition = {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::store
-* @see app/Http/Controllers/RiotAccountController.php:49
+* @see app/Http/Controllers/RiotAccountController.php:62
 * @route '/riot-accounts'
 */
 store.url = (options) => {
@@ -92,7 +92,7 @@ store.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::store
-* @see app/Http/Controllers/RiotAccountController.php:49
+* @see app/Http/Controllers/RiotAccountController.php:62
 * @route '/riot-accounts'
 */
 store.post = (options) => ({
@@ -101,7 +101,7 @@ store.post = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::store
-* @see app/Http/Controllers/RiotAccountController.php:49
+* @see app/Http/Controllers/RiotAccountController.php:62
 * @route '/riot-accounts'
 */
 const storeForm = (options) => ({
@@ -110,7 +110,7 @@ const storeForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::store
-* @see app/Http/Controllers/RiotAccountController.php:49
+* @see app/Http/Controllers/RiotAccountController.php:62
 * @route '/riot-accounts'
 */
 storeForm.post = (options) => ({
@@ -120,7 +120,7 @@ storeForm.post = (options) => ({
 store.form = storeForm;
 /**
 * @see \App\Http\Controllers\RiotAccountController::update
-* @see app/Http/Controllers/RiotAccountController.php:95
+* @see app/Http/Controllers/RiotAccountController.php:111
 * @route '/riot-accounts/{riotAccount}'
 */
 export const update = (args, options) => ({
@@ -133,7 +133,7 @@ update.definition = {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::update
-* @see app/Http/Controllers/RiotAccountController.php:95
+* @see app/Http/Controllers/RiotAccountController.php:111
 * @route '/riot-accounts/{riotAccount}'
 */
 update.url = (args, options) => {
@@ -152,7 +152,7 @@ update.url = (args, options) => {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::update
-* @see app/Http/Controllers/RiotAccountController.php:95
+* @see app/Http/Controllers/RiotAccountController.php:111
 * @route '/riot-accounts/{riotAccount}'
 */
 update.put = (args, options) => ({
@@ -161,7 +161,7 @@ update.put = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::update
-* @see app/Http/Controllers/RiotAccountController.php:95
+* @see app/Http/Controllers/RiotAccountController.php:111
 * @route '/riot-accounts/{riotAccount}'
 */
 const updateForm = (args, options) => ({
@@ -173,7 +173,7 @@ const updateForm = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::update
-* @see app/Http/Controllers/RiotAccountController.php:95
+* @see app/Http/Controllers/RiotAccountController.php:111
 * @route '/riot-accounts/{riotAccount}'
 */
 updateForm.put = (args, options) => ({
@@ -186,7 +186,7 @@ updateForm.put = (args, options) => ({
 update.form = updateForm;
 /**
 * @see \App\Http\Controllers\RiotAccountController::sync
-* @see app/Http/Controllers/RiotAccountController.php:117
+* @see app/Http/Controllers/RiotAccountController.php:133
 * @route '/riot-accounts/{riotAccount}/sync'
 */
 export const sync = (args, options) => ({
@@ -199,7 +199,7 @@ sync.definition = {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::sync
-* @see app/Http/Controllers/RiotAccountController.php:117
+* @see app/Http/Controllers/RiotAccountController.php:133
 * @route '/riot-accounts/{riotAccount}/sync'
 */
 sync.url = (args, options) => {
@@ -218,7 +218,7 @@ sync.url = (args, options) => {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::sync
-* @see app/Http/Controllers/RiotAccountController.php:117
+* @see app/Http/Controllers/RiotAccountController.php:133
 * @route '/riot-accounts/{riotAccount}/sync'
 */
 sync.post = (args, options) => ({
@@ -227,7 +227,7 @@ sync.post = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::sync
-* @see app/Http/Controllers/RiotAccountController.php:117
+* @see app/Http/Controllers/RiotAccountController.php:133
 * @route '/riot-accounts/{riotAccount}/sync'
 */
 const syncForm = (args, options) => ({
@@ -236,7 +236,7 @@ const syncForm = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::sync
-* @see app/Http/Controllers/RiotAccountController.php:117
+* @see app/Http/Controllers/RiotAccountController.php:133
 * @route '/riot-accounts/{riotAccount}/sync'
 */
 syncForm.post = (args, options) => ({
@@ -246,7 +246,7 @@ syncForm.post = (args, options) => ({
 sync.form = syncForm;
 /**
 * @see \App\Http\Controllers\RiotAccountController::destroy
-* @see app/Http/Controllers/RiotAccountController.php:147
+* @see app/Http/Controllers/RiotAccountController.php:166
 * @route '/riot-accounts/{riotAccount}'
 */
 export const destroy = (args, options) => ({
@@ -259,7 +259,7 @@ destroy.definition = {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::destroy
-* @see app/Http/Controllers/RiotAccountController.php:147
+* @see app/Http/Controllers/RiotAccountController.php:166
 * @route '/riot-accounts/{riotAccount}'
 */
 destroy.url = (args, options) => {
@@ -278,7 +278,7 @@ destroy.url = (args, options) => {
 };
 /**
 * @see \App\Http\Controllers\RiotAccountController::destroy
-* @see app/Http/Controllers/RiotAccountController.php:147
+* @see app/Http/Controllers/RiotAccountController.php:166
 * @route '/riot-accounts/{riotAccount}'
 */
 destroy.delete = (args, options) => ({
@@ -287,7 +287,7 @@ destroy.delete = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::destroy
-* @see app/Http/Controllers/RiotAccountController.php:147
+* @see app/Http/Controllers/RiotAccountController.php:166
 * @route '/riot-accounts/{riotAccount}'
 */
 const destroyForm = (args, options) => ({
@@ -299,7 +299,7 @@ const destroyForm = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\RiotAccountController::destroy
-* @see app/Http/Controllers/RiotAccountController.php:147
+* @see app/Http/Controllers/RiotAccountController.php:166
 * @route '/riot-accounts/{riotAccount}'
 */
 destroyForm.delete = (args, options) => ({

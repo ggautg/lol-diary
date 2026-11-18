@@ -33,7 +33,7 @@ function submit() {
 
     <form class="mt-6 space-y-5" @submit.prevent="submit">
         <div class="lol-field">
-            <label class="lol-label" for="email">Email</label>
+            <label class="lol-label" for="email">Correo electrónico</label>
             <input
                 id="email"
                 v-model="form.email"

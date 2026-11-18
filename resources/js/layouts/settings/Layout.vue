@@ -1,68 +1,58 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
-import Heading from '@/components/Heading.vue';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+/**
+ * Marco de la sección Ajustes: subnavegación lateral y aviso de éxito.
+ * Se combina con DiaryLayout (ver app.js), así que no repite la cabecera
+ * principal de la aplicación.
+ */
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import FlashNotice from '@/components/lol/FlashNotice.vue';
+import PageHeader from '@/components/lol/PageHeader.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
-import { toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
-const sidebarNavItems = [
-    {
-        title: 'Profile',
-        href: editProfile(),
-    },
-    {
-        title: 'Security',
-        href: editSecurity(),
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
-    },
+
+const items = [
+    { title: 'Perfil', href: editProfile() },
+    { title: 'Seguridad', href: editSecurity() },
+    { title: 'Apariencia', href: editAppearance() },
 ];
+
 const { isCurrentOrParentUrl } = useCurrentUrl();
+
+const page = usePage();
+const success = computed(() => page.props.flash?.success);
 </script>
 
 <template>
-    <div class="px-4 py-6">
-        <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+    <div class="lol-container">
+        <PageHeader
+            title="Ajustes"
+            subtitle="Tu perfil, la seguridad de la cuenta y la apariencia."
         />
 
-        <div class="flex flex-col lg:flex-row lg:space-x-12">
-            <aside class="w-full max-w-xl lg:w-48">
-                <nav
-                    class="flex flex-col space-y-1 space-x-0"
-                    aria-label="Settings"
-                >
-                    <Button
-                        v-for="item in sidebarNavItems"
-                        :key="toUrl(item.href)"
-                        variant="ghost"
-                        :class="[
-                            'w-full justify-start',
-                            { 'bg-muted': isCurrentOrParentUrl(item.href) },
-                        ]"
-                        as-child
+        <FlashNotice :success="success" />
+
+        <div class="lol-settings">
+            <aside>
+                <nav class="lol-settings-nav" aria-label="Ajustes">
+                    <Link
+                        v-for="item in items"
+                        :key="item.title"
+                        :href="item.href"
+                        :aria-current="
+                            isCurrentOrParentUrl(item.href) ? 'page' : undefined
+                        "
                     >
-                        <Link :href="item.href">
-                            <component :is="item.icon" class="h-4 w-4" />
-                            {{ item.title }}
-                        </Link>
-                    </Button>
+                        {{ item.title }}
+                    </Link>
                 </nav>
             </aside>
 
-            <Separator class="my-6 lg:hidden" />
-
-            <div class="flex-1 md:max-w-2xl">
-                <section class="max-w-xl space-y-12">
-                    <slot />
-                </section>
-            </div>
+            <section class="lol-settings-body">
+                <slot />
+            </section>
         </div>
     </div>
 </template>

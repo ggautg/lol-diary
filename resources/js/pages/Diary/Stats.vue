@@ -1,9 +1,19 @@
 <script setup>
+/**
+ * Panel de estadísticas: resumen, winrate por hora, por ánimo,
+ * por campeón y por etiqueta.
+ * El filtro de cuenta se refleja en la URL para poder compartirla.
+ */
 import { Head, router } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import ChampionIcon from '@/components/ChampionIcon.vue';
+import AccountFilter from '@/components/lol/AccountFilter.vue';
+import ChampionTable from '@/components/lol/ChampionTable.vue';
+import PageHeader from '@/components/lol/PageHeader.vue';
+import StatStrip from '@/components/lol/StatStrip.vue';
 import WinrateBar from '@/components/WinrateBar.vue';
 import DiaryLayout from '@/layouts/DiaryLayout.vue';
+import { moodLabel } from '@/lib/lol';
 
 defineOptions({ layout: DiaryLayout });
 
@@ -13,36 +23,39 @@ const props = defineProps({
     stats: { type: Object, required: true },
 });
 
-// Below this many games a percentage is mostly noise
+// Por debajo de esta muestra un porcentaje es casi ruido.
 const MIN_GAMES = 3;
 
-const MOOD_LABELS = {
-    focused: 'Concentrado',
-    calm: 'Tranquilo',
-    hyped: 'Motivado',
-    tired: 'Cansado',
-    tilted: 'Tilteado',
-};
-
-const selected = ref(props.selectedAccount);
-
-watch(selected, (value) => {
-    router.get('/diary/stats', value === null ? {} : { account: value }, {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true,
-    });
+const selected = computed({
+    get: () => props.selectedAccount,
+    set: (value) => {
+        router.get(
+            '/diary/stats',
+            value === null ? {} : { account: value },
+            {
+                preserveScroll: true,
+                preserveState: true,
+                replace: true,
+            },
+        );
+    },
 });
 
 function formatHour(hour) {
     return `${String(hour).padStart(2, '0')}:00`;
 }
 
-/* ---------- Highlights ---------- */
+/* ---------- Resumen ---------- */
+const overview = computed(() => [
+    { label: 'Partidas', value: props.stats.overview.games },
+    { label: 'Victorias', value: props.stats.overview.wins, tone: 'win' },
+    { label: 'Derrotas', value: props.stats.overview.losses, tone: 'loss' },
+]);
+
 const bestHour = computed(
     () =>
         props.stats.hours
-            .filter((h) => h.games >= MIN_GAMES)
+            .filter((hour) => hour.games >= MIN_GAMES)
             .sort((a, b) => b.winrate - a.winrate || b.games - a.games)[0] ??
         null,
 );
@@ -52,15 +65,15 @@ const mostPlayed = computed(() => props.stats.champions[0] ?? null);
 const bestChampion = computed(
     () =>
         props.stats.champions
-            .filter((c) => c.games >= MIN_GAMES)
+            .filter((champion) => champion.games >= MIN_GAMES)
             .sort((a, b) => b.winrate - a.winrate || b.games - a.games)[0] ??
         null,
 );
 
-/* ---------- Hour chart ---------- */
-// Always 24 columns, even for hours with no games
+/* ---------- Gráfico por hora ---------- */
+// Siempre 24 columnas, incluso para horas sin partidas.
 const hourBars = computed(() => {
-    const byHour = new Map(props.stats.hours.map((h) => [h.hour, h]));
+    const byHour = new Map(props.stats.hours.map((hour) => [hour.hour, hour]));
 
     return Array.from(
         { length: 24 },
@@ -98,55 +111,31 @@ const hourReadout = computed(() => {
         ? `${formatHour(bar.hour)}: sin partidas.`
         : `${formatHour(bar.hour)}: ${bar.winrate}% · ${bar.wins}V ${bar.losses}D (${bar.games} partidas)`;
 });
-
-/* ---------- Champions table ---------- */
-const onlyReliable = ref(false);
-const showAllChampions = ref(false);
-
-const champions = computed(() => {
-    const list = onlyReliable.value
-        ? props.stats.champions.filter((c) => c.games >= MIN_GAMES)
-        : props.stats.champions;
-
-    return showAllChampions.value ? list : list.slice(0, 10);
-});
 </script>
 
 <template>
     <Head title="Estadísticas" />
 
     <div class="lol-container">
-        <div class="lol-toolbar">
-            <header>
-                <h1 class="lol-page-title">Estadísticas</h1>
-                <p class="lol-page-sub">
-                    Qué campeones, horas y estados de ánimo te funcionan mejor.
-                </p>
-            </header>
+        <PageHeader
+            title="Estadísticas"
+            subtitle="Qué campeones, horas y estados de ánimo te funcionan mejor."
+        >
+            <template #actions>
+                <AccountFilter
+                    v-model="selected"
+                    :accounts="accounts"
+                />
+            </template>
+        </PageHeader>
 
-            <select
-                v-model="selected"
-                class="lol-select"
-                aria-label="Filtrar por cuenta"
-            >
-                <option :value="null">Todas las cuentas</option>
-                <option
-                    v-for="account in accounts"
-                    :key="account.id"
-                    :value="account.id"
-                >
-                    {{ account.label }}
-                </option>
-            </select>
-        </div>
-
-        <div v-if="stats.overview.games === 0" class="lol-panel text-sm">
+        <p v-if="stats.overview.games === 0" class="lol-panel text-sm">
             Todavía no hay partidas para mostrar. Importa algunas desde la
             sección Partidas.
-        </div>
+        </p>
 
         <template v-else>
-            <!-- Overview -->
+            <!-- Resumen -->
             <section>
                 <h2 class="lol-section-title">Resumen</h2>
 
@@ -163,26 +152,7 @@ const champions = computed(() => {
                     </div>
 
                     <div class="lol-overview-body">
-                        <div class="lol-stats">
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Partidas</p>
-                                <p class="lol-stat-value">
-                                    {{ stats.overview.games }}
-                                </p>
-                            </div>
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Victorias</p>
-                                <p class="lol-stat-value lol-win-text">
-                                    {{ stats.overview.wins }}
-                                </p>
-                            </div>
-                            <div class="lol-stat">
-                                <p class="lol-stat-label">Derrotas</p>
-                                <p class="lol-stat-value lol-loss-text">
-                                    {{ stats.overview.losses }}
-                                </p>
-                            </div>
-                        </div>
+                        <StatStrip :stats="overview" />
 
                         <div class="lol-stats">
                             <div class="lol-stat">
@@ -204,7 +174,10 @@ const champions = computed(() => {
 
                             <div class="lol-stat">
                                 <p class="lol-stat-label">Más jugado</p>
-                                <div v-if="mostPlayed" class="lol-champ-cell">
+                                <div
+                                    v-if="mostPlayed"
+                                    class="lol-champ-cell"
+                                >
                                     <ChampionIcon
                                         :champion="mostPlayed.champion"
                                         :size="26"
@@ -214,9 +187,7 @@ const champions = computed(() => {
                                     >
                                         {{ mostPlayed.champion }}
                                         <span class="lol-muted"
-                                            >{{
-                                                mostPlayed.games
-                                            }}
+                                            >{{ mostPlayed.games }}
                                             partidas</span
                                         >
                                     </p>
@@ -225,7 +196,10 @@ const champions = computed(() => {
 
                             <div class="lol-stat">
                                 <p class="lol-stat-label">Mejor winrate</p>
-                                <div v-if="bestChampion" class="lol-champ-cell">
+                                <div
+                                    v-if="bestChampion"
+                                    class="lol-champ-cell"
+                                >
                                     <ChampionIcon
                                         :champion="bestChampion.champion"
                                         :size="26"
@@ -250,15 +224,15 @@ const champions = computed(() => {
                 </div>
             </section>
 
-            <!-- By hour -->
+            <!-- Por hora -->
             <section>
                 <h2 class="lol-section-title">Winrate por hora del día</h2>
 
                 <div class="lol-panel lol-rise">
                     <p class="lol-muted mb-3">
                         Hora local. La línea dorada marca el 50 %. Las columnas
-                        tenues tienen menos de
-                        {{ MIN_GAMES }} partidas: no son confiables.
+                        tenues tienen menos de {{ MIN_GAMES }} partidas: no son
+                        confiables.
                     </p>
 
                     <div class="lol-hours">
@@ -299,7 +273,7 @@ const champions = computed(() => {
                 </div>
             </section>
 
-            <!-- By mood -->
+            <!-- Por ánimo -->
             <section>
                 <h2 class="lol-section-title">Winrate por estado de ánimo</h2>
 
@@ -322,7 +296,7 @@ const champions = computed(() => {
                         >
                             <span class="lol-bar-row-label">
                                 <span class="lol-dot" />
-                                {{ MOOD_LABELS[mood.mood] ?? mood.mood }}
+                                {{ moodLabel(mood.mood) }}
                             </span>
                             <WinrateBar
                                 :winrate="mood.winrate"
@@ -340,108 +314,21 @@ const champions = computed(() => {
                 </div>
             </section>
 
-            <!-- Champions -->
+            <!-- Campeones -->
             <section>
                 <h2 class="lol-section-title">Campeones</h2>
 
-                <div class="lol-panel lol-rise !p-2">
-                    <div class="px-3 pt-2 pb-1">
-                        <label class="lol-check">
-                            <input v-model="onlyReliable" type="checkbox" />
-                            Solo con {{ MIN_GAMES }}+ partidas
-                        </label>
-                    </div>
-
-                    <div class="lol-table-wrap">
-                        <table class="lol-table">
-                            <thead>
-                                <tr>
-                                    <th>Campeón</th>
-                                    <th>Partidas</th>
-                                    <th>V / D</th>
-                                    <th>Winrate</th>
-                                    <th>KDA</th>
-                                    <th>Daño prom.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="row in champions"
-                                    :key="row.champion"
-                                    :data-result="
-                                        row.winrate >= 50 ? 'win' : 'loss'
-                                    "
-                                >
-                                    <td>
-                                        <div class="lol-champ-cell">
-                                            <ChampionIcon
-                                                :champion="row.champion"
-                                                :size="30"
-                                            />
-                                            <span class="lol-strong">{{
-                                                row.champion
-                                            }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="lol-num">{{ row.games }}</td>
-                                    <td class="lol-num">
-                                        {{ row.wins }} / {{ row.losses }}
-                                    </td>
-                                    <td>
-                                        <div class="lol-wr-cell">
-                                            <span
-                                                class="lol-num lol-strong"
-                                                :class="
-                                                    row.winrate >= 50
-                                                        ? 'lol-win-text'
-                                                        : 'lol-loss-text'
-                                                "
-                                            >
-                                                {{ row.winrate }}%
-                                            </span>
-                                            <WinrateBar
-                                                :winrate="row.winrate"
-                                                :games="row.games"
-                                                :min-games="MIN_GAMES"
-                                            />
-                                        </div>
-                                    </td>
-                                    <td class="lol-num">{{ row.kda }}</td>
-                                    <td class="lol-num">
-                                        {{
-                                            row.avg_damage.toLocaleString(
-                                                'es-PY',
-                                            )
-                                        }}
-                                    </td>
-                                </tr>
-                                <tr v-if="champions.length === 0">
-                                    <td colspan="6">
-                                        Ningún campeón cumple el filtro.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div
-                        v-if="!showAllChampions && stats.champions.length > 10"
-                        class="px-3 py-2"
-                    >
-                        <button
-                            type="button"
-                            class="lol-btn"
-                            @click="showAllChampions = true"
-                        >
-                            Mostrar todos ({{ stats.champions.length }})
-                        </button>
-                    </div>
-                </div>
+                <ChampionTable
+                    :champions="stats.champions"
+                    :min-games="MIN_GAMES"
+                />
             </section>
 
-            <!-- Tags -->
+            <!-- Etiquetas -->
             <section>
-                <h2 class="lol-section-title">Tus etiquetas más repetidas</h2>
+                <h2 class="lol-section-title">
+                    Tus etiquetas más repetidas
+                </h2>
 
                 <div class="lol-panel lol-rise">
                     <p class="lol-muted mb-4">

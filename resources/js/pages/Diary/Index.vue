@@ -1,29 +1,57 @@
 <script setup>
+/**
+ * Pantalla principal del diario: cuentas seguidas y últimas partidas.
+ * Desde aquí se importan partidas nuevas desde Riot con un clic.
+ */
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { RefreshCw } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import ChampionIcon from '@/components/ChampionIcon.vue';
+import AccountCard from '@/components/lol/AccountCard.vue';
+import FlashNotice from '@/components/lol/FlashNotice.vue';
+import PageHeader from '@/components/lol/PageHeader.vue';
+import StatStrip from '@/components/lol/StatStrip.vue';
 import DiaryLayout from '@/layouts/DiaryLayout.vue';
 import {
     csPerMinute,
     formatDuration,
     formatMatchDate,
+    formatNumber,
     kdaRatio,
     roleLabel,
 } from '@/lib/lol';
 
 defineOptions({ layout: DiaryLayout });
 
-defineProps({
+const props = defineProps({
     accounts: { type: Array, required: true },
     matches: { type: Array, required: true },
 });
 
 const page = usePage();
+
+/** Id de la cuenta cuya importación está en curso (bloquea el resto). */
 const loadingId = ref(null);
 
 const successMessage = computed(() => page.props.flash?.success);
 const errorMessage = computed(() => page.props.errors?.fetch);
+
+/** Resumen de las partidas mostradas en la tabla inferior. */
+const summary = computed(() => {
+    const games = props.matches.length;
+    const wins = props.matches.filter((match) => match.win).length;
+
+    return [
+        { label: 'Cuentas', value: props.accounts.length },
+        { label: 'Partidas', value: games },
+        { label: 'Victorias', value: wins, tone: 'win' },
+        { label: 'Derrotas', value: games - wins, tone: 'loss' },
+        {
+            label: 'Winrate',
+            value: `${games === 0 ? 0 : Math.round((wins / games) * 100)}%`,
+        },
+    ];
+});
 
 function fetchMatches(accountId) {
     router.post(
@@ -42,17 +70,14 @@ function fetchMatches(accountId) {
     <Head title="Partidas" />
 
     <div class="lol-container">
-        <header>
-            <h1 class="lol-page-title">Partidas</h1>
-            <p class="lol-page-sub">
-                Tus cuentas y las últimas partidas importadas.
-            </p>
-        </header>
+        <PageHeader
+            title="Partidas"
+            subtitle="Tus cuentas y las últimas partidas importadas."
+        />
 
-        <p v-if="successMessage" class="lol-notice">{{ successMessage }}</p>
-        <p v-if="errorMessage" class="lol-notice lol-notice--error">
-            {{ errorMessage }}
-        </p>
+        <FlashNotice :success="successMessage" :error="errorMessage" />
+
+        <StatStrip :stats="summary" />
 
         <section>
             <h2 class="lol-section-title">Cuentas</h2>
@@ -64,45 +89,39 @@ function fetchMatches(accountId) {
                 >.
             </div>
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <article
+            <div
+                v-else
+                class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
+                <AccountCard
                     v-for="(account, i) in accounts"
                     :key="account.id"
-                    class="lol-panel lol-panel--interactive lol-rise"
+                    :account="account"
+                    interactive
+                    class="lol-rise"
                     :style="{ animationDelay: `${i * 70}ms` }"
                 >
-                    <div class="flex items-start justify-between gap-2">
-                        <div>
-                            <p class="lol-account-label">{{ account.label }}</p>
-                            <p class="lol-account-id">
-                                {{ account.game_name }}#{{ account.tag_line }}
-                            </p>
-                        </div>
-                        <span class="lol-badge">{{
-                            account.platform.toUpperCase()
-                        }}</span>
-                    </div>
-
-                    <p class="lol-account-count">
-                        <strong>{{ account.matches_count }}</strong>
-                        partidas
-                    </p>
-
-                    <button
-                        type="button"
-                        class="lol-btn"
-                        :disabled="loadingId !== null"
-                        @click="fetchMatches(account.id)"
-                    >
-                        <RefreshCw
-                            :size="14"
-                            :class="{ 'lol-spin': loadingId === account.id }"
-                        />
-                        {{
-                            loadingId === account.id ? 'Importando...' : 'Fetch'
-                        }}
-                    </button>
-                </article>
+                    <template #actions>
+                        <button
+                            type="button"
+                            class="lol-btn"
+                            :disabled="loadingId !== null"
+                            @click="fetchMatches(account.id)"
+                        >
+                            <RefreshCw
+                                :size="14"
+                                :class="{
+                                    'lol-spin': loadingId === account.id,
+                                }"
+                            />
+                            {{
+                                loadingId === account.id
+                                    ? 'Importando...'
+                                    : 'Importar partidas'
+                            }}
+                        </button>
+                    </template>
+                </AccountCard>
             </div>
         </section>
 
@@ -110,7 +129,8 @@ function fetchMatches(accountId) {
             <h2 class="lol-section-title">Últimas partidas</h2>
 
             <div v-if="matches.length === 0" class="lol-panel text-sm">
-                Todavía no hay partidas. Pulsa Fetch en una cuenta.
+                Todavía no hay partidas. Importa las de una cuenta para
+                empezar.
             </div>
 
             <div v-else class="lol-panel lol-rise !p-2">
@@ -168,11 +188,7 @@ function fetchMatches(accountId) {
                                     >
                                 </td>
                                 <td class="lol-num">
-                                    {{
-                                        match.damage_dealt.toLocaleString(
-                                            'es-PY',
-                                        )
-                                    }}
+                                    {{ formatNumber(match.damage_dealt) }}
                                 </td>
                                 <td class="lol-num">
                                     {{ match.cs }}
@@ -182,7 +198,7 @@ function fetchMatches(accountId) {
                                                 match.cs,
                                                 match.duration,
                                             )
-                                        }}/m</span
+                                        }}/min</span
                                     >
                                 </td>
                                 <td class="lol-num">

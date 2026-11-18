@@ -10,8 +10,17 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+/**
+ * Guarda la nota del diario de una partida: ánimo, texto y etiquetas.
+ */
 class DiaryEntryController extends Controller
 {
+    /**
+     * Crea o actualiza la nota y sincroniza sus etiquetas.
+     *
+     * Si no queda texto ni etiquetas, elimina la nota para no dejar filas
+     * vacías.
+     */
     public function update(Request $request, LolMatch $lolMatch): RedirectResponse
     {
         abort_unless($lolMatch->riotAccount->user_id === $request->user()->id, 403);
@@ -25,7 +34,7 @@ class DiaryEntryController extends Controller
         ]);
 
         // Normalize BEFORE searching: the Tag mutator only runs when saving
-        $tagNames = collect($data['tags'] ?? [])
+        $tagNames = collect((array) ($data['tags'] ?? []))
             ->map(fn ($name) => mb_strtolower(trim((string) $name)))
             ->filter()
             ->unique()

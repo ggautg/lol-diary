@@ -15,10 +15,20 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * Alta, edición, verificación y borrado de cuentas de League of Legends.
+ *
+ * Cada usuario puede seguir hasta MAX_ACCOUNTS cuentas. Al añadir una se
+ * consulta Riot para comprobar que el Riot ID existe y guardar su puuid.
+ */
 class RiotAccountController extends Controller
 {
+    /** Límite de cuentas por usuario. */
     private const MAX_ACCOUNTS = 10;
 
+    /**
+     * Lista las cuentas con el número de partidas y de notas.
+     */
     public function index(Request $request): Response
     {
         $accounts = $request->user()->riotAccounts()
@@ -46,6 +56,9 @@ class RiotAccountController extends Controller
         ]);
     }
 
+    /**
+     * Valida el Riot ID contra la API y guarda la cuenta.
+     */
     public function store(Request $request, RiotApiService $riot): RedirectResponse
     {
         $user = $request->user();
@@ -61,7 +74,7 @@ class RiotAccountController extends Controller
 
         if ($user->riotAccounts()->count() >= self::MAX_ACCOUNTS) {
             throw ValidationException::withMessages([
-                'riot_id' => 'Llegaste al máximo de ' . self::MAX_ACCOUNTS . ' cuentas.',
+                'riot_id' => 'Llegaste al máximo de '.self::MAX_ACCOUNTS.' cuentas.',
             ]);
         }
 
@@ -89,9 +102,12 @@ class RiotAccountController extends Controller
             throw ValidationException::withMessages(['riot_id' => 'Esa cuenta de Riot ya está registrada.']);
         }
 
-        return back()->with('success', "Cuenta {$data['label']} añadida. Pulsa Fetch en Partidas para importar sus partidas.");
+        return back()->with('success', "Cuenta {$data['label']} añadida. Importa sus partidas desde la sección Partidas.");
     }
 
+    /**
+     * Cambia la etiqueta y el servidor de una cuenta ya guardada.
+     */
     public function update(Request $request, RiotAccount $riotAccount): RedirectResponse
     {
         $this->authorizeOwner($request, $riotAccount);
@@ -112,7 +128,7 @@ class RiotAccountController extends Controller
     }
 
     /**
-     * Ask Riot for the current Riot ID of this account (names can change in-game).
+     * Pregunta a Riot el Riot ID actual de la cuenta (los nombres cambian).
      */
     public function sync(Request $request, RiotAccount $riotAccount, RiotApiService $riot): RedirectResponse
     {
@@ -144,23 +160,32 @@ class RiotAccountController extends Controller
             : "{$riotAccount->label}: {$before} → {$after}.");
     }
 
+    /**
+     * Elimina la cuenta; sus partidas y notas se borran en cascada.
+     */
     public function destroy(Request $request, RiotAccount $riotAccount): RedirectResponse
     {
         $this->authorizeOwner($request, $riotAccount);
 
         $label = $riotAccount->label;
-        $riotAccount->delete(); // matches and their diary entries go with it (cascade)
+        $riotAccount->delete(); // las partidas y sus notas caen con ella (cascade)
 
         return back()->with('success', "Cuenta {$label} eliminada.");
     }
 
+    /**
+     * Comprueba que la cuenta pertenece al usuario autenticado.
+     */
     private function authorizeOwner(Request $request, RiotAccount $riotAccount): void
     {
         abort_unless($riotAccount->user_id === $request->user()->id, 403);
     }
 
     /**
-     * "Name#TAG" => ["Name", "TAG"]. Splits on the LAST "#".
+     * "Nombre#TAG" => ["Nombre", "TAG"]. Divide por el ÚLTIMO "#",
+     * porque el nombre puede contener almohadillas.
+     *
+     * @return array{0: string, 1: string}
      */
     private function splitRiotId(string $riotId): array
     {
@@ -178,9 +203,14 @@ class RiotAccountController extends Controller
         return [$gameName, $tagLine];
     }
 
+    /**
+     * Servidores disponibles con su nombre legible para el selector.
+     *
+     * @return array<int, array{value: string, label: string}>
+     */
     private function platforms(): array
     {
-        return collect(config('riot.regions'))
+        return collect((array) config('riot.regions'))
             ->keys()
             ->map(fn (string $key) => [
                 'value' => $key,

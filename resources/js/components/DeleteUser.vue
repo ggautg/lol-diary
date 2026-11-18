@@ -1,11 +1,12 @@
 <script setup>
+/**
+ * Zona de peligro del perfil: elimina la cuenta y todos sus datos.
+ * Pide la contraseña en un diálogo de confirmación antes de borrar.
+ */
 import { Form } from '@inertiajs/vue3';
+import { TriangleAlert } from 'lucide-vue-next';
 import { useTemplateRef } from 'vue';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import Heading from '@/components/Heading.vue';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -16,74 +17,81 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+
 const passwordInput = useTemplateRef('passwordInput');
 </script>
 
 <template>
-    <div class="space-y-6">
-        <Heading
-            variant="small"
-            title="Delete account"
-            description="Delete your account and all of its resources"
-        />
-        <div
-            class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10"
-        >
-            <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
-                <p class="text-sm">
-                    Please proceed with caution, this cannot be undone.
-                </p>
-            </div>
+    <div class="lol-settings-section">
+        <h2 class="lol-settings-heading">Eliminar cuenta</h2>
+        <p class="lol-muted">
+            Borra tu cuenta y todos los datos guardados en el diario.
+        </p>
+
+        <div class="lol-confirm">
+            <p class="flex items-center gap-2 font-semibold">
+                <TriangleAlert :size="16" aria-hidden="true" />
+                Esto no se puede deshacer
+            </p>
+            <p>
+                Se eliminarán tus cuentas de Riot, partidas importadas, notas y
+                etiquetas.
+            </p>
+
             <Dialog>
                 <DialogTrigger as-child>
-                    <Button variant="destructive" data-test="delete-user-button"
-                        >Delete account</Button
+                    <button
+                        type="button"
+                        class="lol-btn lol-btn--danger"
+                        data-test="delete-user-button"
                     >
+                        Eliminar mi cuenta
+                    </button>
                 </DialogTrigger>
+
                 <DialogContent>
                     <Form
                         v-bind="ProfileController.destroy.form()"
                         reset-on-success
-                        @error="() => passwordInput?.focus()"
-                        :options="{
-                            preserveScroll: true,
-                        }"
-                        class="space-y-6"
+                        :options="{ preserveScroll: true }"
+                        class="lol-form"
                         v-slot="{ errors, processing, reset, clearErrors }"
+                        @error="() => passwordInput?.focus()"
                     >
                         <DialogHeader class="space-y-3">
-                            <DialogTitle
-                                >Are you sure you want to delete your
-                                account?</DialogTitle
-                            >
+                            <DialogTitle>
+                                ¿Seguro que quieres eliminar tu cuenta?
+                            </DialogTitle>
                             <DialogDescription>
-                                Once your account is deleted, all of its
-                                resources and data will also be permanently
-                                deleted. Please enter your password to confirm
-                                you would like to permanently delete your
-                                account.
+                                Al eliminarla se borrarán también todas tus
+                                cuentas, partidas y notas. Escribe tu contraseña
+                                para confirmar.
                             </DialogDescription>
                         </DialogHeader>
 
-                        <div class="grid gap-2">
-                            <Label for="password" class="sr-only"
-                                >Password</Label
-                            >
-                            <PasswordInput
+                        <div class="lol-field">
+                            <label class="lol-label sr-only" for="password">
+                                Contraseña
+                            </label>
+                            <input
                                 id="password"
-                                name="password"
                                 ref="passwordInput"
-                                placeholder="Password"
+                                name="password"
+                                type="password"
+                                class="lol-input"
+                                placeholder="Tu contraseña"
+                                autocomplete="current-password"
                             />
-                            <InputError :message="errors.password" />
+                            <p v-if="errors.password" class="lol-error">
+                                {{ errors.password }}
+                            </p>
                         </div>
 
                         <DialogFooter class="gap-2">
                             <DialogClose as-child>
-                                <Button
-                                    variant="secondary"
+                                <button
+                                    type="button"
+                                    class="lol-btn"
                                     @click="
                                         () => {
                                             clearErrors();
@@ -91,18 +99,22 @@ const passwordInput = useTemplateRef('passwordInput');
                                         }
                                     "
                                 >
-                                    Cancel
-                                </Button>
+                                    Cancelar
+                                </button>
                             </DialogClose>
 
-                            <Button
+                            <button
                                 type="submit"
-                                variant="destructive"
+                                class="lol-btn lol-btn--danger"
                                 :disabled="processing"
                                 data-test="confirm-delete-user-button"
                             >
-                                Delete account
-                            </Button>
+                                {{
+                                    processing
+                                        ? 'Eliminando...'
+                                        : 'Eliminar cuenta'
+                                }}
+                            </button>
                         </DialogFooter>
                     </Form>
                 </DialogContent>

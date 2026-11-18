@@ -1,7 +1,7 @@
 import { queryParams } from "./../../../../wayfinder";
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 export const index = (options) => ({
@@ -14,7 +14,7 @@ index.definition = {
 };
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 index.url = (options) => {
@@ -22,7 +22,7 @@ index.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 index.get = (options) => ({
@@ -31,7 +31,7 @@ index.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 index.head = (options) => ({
@@ -40,7 +40,7 @@ index.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 const indexForm = (options) => ({
@@ -49,7 +49,7 @@ const indexForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 indexForm.get = (options) => ({
@@ -58,7 +58,7 @@ indexForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\StatsController::index
-* @see app/Http/Controllers/StatsController.php:13
+* @see app/Http/Controllers/StatsController.php:19
 * @route '/diary/stats'
 */
 indexForm.head = (options) => ({

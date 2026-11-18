@@ -8,9 +8,7 @@ use Illuminate\Support\Carbon;
 
 class MatchImporter
 {
-    public function __construct(private RiotApiService $riot)
-    {
-    }
+    public function __construct(private RiotApiService $riot) {}
 
     /**
      * Import the latest matches of an account. Returns how many were new.
@@ -31,7 +29,7 @@ class MatchImporter
         foreach (array_diff($ids, $known) as $matchId) {
             $data = $this->riot->getMatch($matchId, $account->platform);
 
-            $me = collect($data['info']['participants'])
+            $me = collect((array) ($data['info']['participants'] ?? []))
                 ->firstWhere('puuid', $account->puuid);
 
             if ($me === null) {
@@ -73,6 +71,10 @@ class MatchImporter
 
     /**
      * Map a Riot participant into our lol_matches columns.
+     *
+     * @param  array<string, mixed>  $info
+     * @param  array<string, mixed>  $me
+     * @return array<string, mixed>
      */
     private function map(array $info, array $me): array
     {

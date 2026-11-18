@@ -5,17 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\LolMatch;
 use App\Models\RiotAccount;
 use App\Services\MatchImporter;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\ConnectionException;
 use App\Support\RiotErrorMessage;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Carbon;
 
+/**
+ * Pantallas principales del diario: últimas partidas, calendario e importación.
+ */
 class LolDiaryController extends Controller
 {
+    /**
+     * Listado de cuentas y últimas partidas importadas.
+     */
     public function index(Request $request): Response
     {
         $accounts = $request->user()->riotAccounts()
@@ -28,13 +34,20 @@ class LolDiaryController extends Controller
             ->orderByDesc('played_at')
             ->limit(30)
             ->get()
-            ->map(fn(LolMatch $match) => $match->toDiaryArray());
+            ->map(fn (LolMatch $match) => $match->toDiaryArray());
+
         return Inertia::render('Diary/Index', [
             'accounts' => $accounts,
             'matches' => $matches,
         ]);
     }
 
+    /**
+     * Importa las últimas partidas de una cuenta desde Riot.
+     *
+     * Devuelve cuántas partidas nuevas se guardaron, sin duplicar las que
+     * ya existían.
+     */
     public function fetch(Request $request, RiotAccount $riotAccount, MatchImporter $importer): RedirectResponse
     {
         abort_unless($riotAccount->user_id === $request->user()->id, 403);
@@ -50,13 +63,19 @@ class LolDiaryController extends Controller
             : "{$riotAccount->label}: {$imported} partidas nuevas importadas.");
     }
 
+    /**
+     * Calendario mensual de partidas con las notas de cada día.
+     *
+     * El mes se recibe como "Y-m"; las fechas se agrupan en la zona horaria
+     * del diario (config/diary.php) y no en UTC.
+     */
     public function calendar(Request $request): Response
     {
         $request->validate(['month' => ['nullable', 'date_format:Y-m']]);
 
         $tz = config('diary.timezone');
 
-        // Build from "Y-m-01" so the day can never overflow (e.g. Feb 31)
+        // Se construye desde "Y-m-01" para que el día nunca desborde (ej. 31 feb).
         $monthKey = $request->query('month') ?? now($tz)->format('Y-m');
         $month = Carbon::createFromFormat('Y-m-d', "{$monthKey}-01", $tz)->startOfDay();
 
@@ -81,8 +100,6 @@ class LolDiaryController extends Controller
                     'time' => $local->format('H:i'),
                 ];
             });
-
-
 
         return Inertia::render('Diary/Calendar', [
             'month' => $month->format('Y-m'),

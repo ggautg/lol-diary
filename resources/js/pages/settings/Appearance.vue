@@ -1,31 +1,22 @@
 <script setup>
+/**
+ * Ajustes de apariencia: paleta de colores del diario.
+ * La elección se guarda en el navegador, así que no toca la base de datos.
+ */
 import { Head } from '@inertiajs/vue3';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
-import Heading from '@/components/Heading.vue';
-import { edit } from '@/routes/appearance';
-defineOptions({
-    layout: {
-        breadcrumbs: [
-            {
-                title: 'Appearance settings',
-                href: edit(),
-            },
-        ],
-    },
-});
 </script>
 
 <template>
-    <Head title="Appearance settings" />
+    <Head title="Apariencia" />
 
-    <h1 class="sr-only">Appearance settings</h1>
+    <div class="lol-settings-section">
+        <h2 class="lol-settings-heading">Apariencia</h2>
+        <p class="lol-muted">
+            Elige la paleta del diario. Se guarda en este navegador y se aplica
+            al instante en todas las pantallas.
+        </p>
 
-    <div class="space-y-6">
-        <Heading
-            variant="small"
-            title="Appearance settings"
-            description="Update the appearance settings for your account"
-        />
         <AppearanceTabs />
     </div>
 </template>

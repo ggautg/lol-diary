@@ -1,7 +1,7 @@
 import { queryParams, applyUrlDefaults } from "./../../../../wayfinder";
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 export const index = (options) => ({
@@ -14,7 +14,7 @@ index.definition = {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 index.url = (options) => {
@@ -22,7 +22,7 @@ index.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 index.get = (options) => ({
@@ -31,7 +31,7 @@ index.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 index.head = (options) => ({
@@ -40,7 +40,7 @@ index.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 const indexForm = (options) => ({
@@ -49,7 +49,7 @@ const indexForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 indexForm.get = (options) => ({
@@ -58,7 +58,7 @@ indexForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::index
-* @see app/Http/Controllers/LolDiaryController.php:19
+* @see app/Http/Controllers/LolDiaryController.php:25
 * @route '/diary'
 */
 indexForm.head = (options) => ({
@@ -71,7 +71,7 @@ indexForm.head = (options) => ({
 index.form = indexForm;
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
-* @see app/Http/Controllers/LolDiaryController.php:38
+* @see app/Http/Controllers/LolDiaryController.php:51
 * @route '/riot-accounts/{riotAccount}/fetch'
 */
 export const fetch = (args, options) => ({
@@ -84,7 +84,7 @@ fetch.definition = {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
-* @see app/Http/Controllers/LolDiaryController.php:38
+* @see app/Http/Controllers/LolDiaryController.php:51
 * @route '/riot-accounts/{riotAccount}/fetch'
 */
 fetch.url = (args, options) => {
@@ -103,7 +103,7 @@ fetch.url = (args, options) => {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
-* @see app/Http/Controllers/LolDiaryController.php:38
+* @see app/Http/Controllers/LolDiaryController.php:51
 * @route '/riot-accounts/{riotAccount}/fetch'
 */
 fetch.post = (args, options) => ({
@@ -112,7 +112,7 @@ fetch.post = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
-* @see app/Http/Controllers/LolDiaryController.php:38
+* @see app/Http/Controllers/LolDiaryController.php:51
 * @route '/riot-accounts/{riotAccount}/fetch'
 */
 const fetchForm = (args, options) => ({
@@ -121,7 +121,7 @@ const fetchForm = (args, options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::fetch
-* @see app/Http/Controllers/LolDiaryController.php:38
+* @see app/Http/Controllers/LolDiaryController.php:51
 * @route '/riot-accounts/{riotAccount}/fetch'
 */
 fetchForm.post = (args, options) => ({
@@ -131,7 +131,7 @@ fetchForm.post = (args, options) => ({
 fetch.form = fetchForm;
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 export const calendar = (options) => ({
@@ -144,7 +144,7 @@ calendar.definition = {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendar.url = (options) => {
@@ -152,7 +152,7 @@ calendar.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendar.get = (options) => ({
@@ -161,7 +161,7 @@ calendar.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendar.head = (options) => ({
@@ -170,7 +170,7 @@ calendar.head = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 const calendarForm = (options) => ({
@@ -179,7 +179,7 @@ const calendarForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendarForm.get = (options) => ({
@@ -188,7 +188,7 @@ calendarForm.get = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\LolDiaryController::calendar
-* @see app/Http/Controllers/LolDiaryController.php:53
+* @see app/Http/Controllers/LolDiaryController.php:72
 * @route '/diary/calendar'
 */
 calendarForm.head = (options) => ({

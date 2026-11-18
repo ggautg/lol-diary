@@ -51,7 +51,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * Update the user's password.
+     * Actualiza la contraseña y vuelve a los ajustes de seguridad.
      */
     public function update(PasswordUpdateRequest $request): RedirectResponse
     {
@@ -59,8 +59,6 @@ class SecurityController extends Controller
             'password' => $request->password,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Password updated.')]);
-
-        return back();
+        return back()->with('success', 'Contraseña actualizada.');
     }
 }

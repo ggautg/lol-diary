@@ -7,6 +7,54 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
+/**
+ * Analiza las partidas del usuario y detecta falencias concretas.
+ *
+ * Compara métricas reales (muertes, tiempo muerto, visión, farmeo, wards)
+ * contra objetivos de coaching por rol. El resultado se usa en la página
+ * «Falencias» y no se guarda: se recalcula con cada consulta.
+ *
+ * @phpstan-type Check array{
+ *     key: string,
+ *     metric: string,
+ *     category: string,
+ *     title: string,
+ *     scope: string|null,
+ *     scope_key: string|null,
+ *     metric_label: string,
+ *     value: float,
+ *     display: string,
+ *     unit: string,
+ *     target: float,
+ *     target_display: string,
+ *     sample: int,
+ *     severity: int,
+ *     level: string,
+ *     status: string,
+ *     higher_is_better: bool,
+ *     importance: int,
+ *     summary: string,
+ *     advice: string|null,
+ *     headroom: float
+ * }
+ * @phpstan-type RoleStats array{
+ *     key: string,
+ *     label: string,
+ *     scope_key: string,
+ *     games: int,
+ *     wins: int,
+ *     winrate: float,
+ *     deaths_per_10: float,
+ *     dead_time_pct: float,
+ *     vision_per_min: float,
+ *     cs_per_min: float,
+ *     control_wards_per_game: float,
+ *     high_death_pct: float,
+ *     reliable: bool,
+ *     targets: array<string, float>,
+ *     flags: array{deaths: bool, dead_time: bool, vision: bool, cs: bool, control_wards: bool}
+ * }
+ */
 class WeaknessService
 {
     /**
@@ -88,6 +136,11 @@ class WeaknessService
         ],
     ];
 
+    /**
+     * Analiza todas las partidas y devuelve el diagnóstico completo.
+     *
+     * @return array<string, mixed>
+     */
     public function analyze(User $user, ?int $accountId = null): array
     {
         $all = $this->baseQuery($user, $accountId)
@@ -140,7 +193,7 @@ class WeaknessService
             ],
             'remakes' => $remakes,
             'score' => $score,
-            'diagnosis' => $this->diagnosis($weaknesses, $score, $overall['games']),
+            'diagnosis' => $this->diagnosis($weaknesses, $score, (int) $overall['games']),
             'summary' => [
                 'high' => count(array_filter($weaknesses, fn (array $check) => $check['severity'] >= 50)),
                 'medium' => count(array_filter(
@@ -149,7 +202,7 @@ class WeaknessService
                 )),
                 'low' => count(array_filter(
                     $weaknesses,
-                    fn (array $check) => $check['severity'] >= self::WEAKNESS_THRESHOLD && $check['severity'] < 25,
+                    fn (array $check) => $check['severity'] < 25,
                 )),
                 'strengths' => count($strengths),
             ],
@@ -162,6 +215,11 @@ class WeaknessService
         ];
     }
 
+    /**
+     * Resultado neutro cuando aún no hay partidas válidas.
+     *
+     * @return array<string, mixed>
+     */
     private function emptyAnalysis(int $remakes): array
     {
         return [
@@ -187,6 +245,12 @@ class WeaknessService
         ];
     }
 
+    /**
+     * Calcula todas las métricas agregadas del conjunto de partidas.
+     *
+     * @param  Collection<int, LolMatch>  $matches
+     * @return array<string, mixed>
+     */
     private function metrics(Collection $matches): array
     {
         $games = $matches->count();
@@ -224,6 +288,12 @@ class WeaknessService
         ];
     }
 
+    /**
+     * Agrupa las métricas por rol y marca los roles con muestra suficiente.
+     *
+     * @param  Collection<int, LolMatch>  $matches
+     * @return Collection<int, RoleStats>
+     */
     private function roles(Collection $matches): Collection
     {
         return $matches
@@ -231,30 +301,30 @@ class WeaknessService
             ->map(function (Collection $group, string $role) {
                 $stats = $this->metrics($group);
                 $targets = $this->targetsFor($role);
-                $reliable = $stats['games'] >= self::MIN_ROLE_GAMES;
+                $reliable = (int) $stats['games'] >= self::MIN_ROLE_GAMES;
 
                 return [
                     'key' => $role,
                     'label' => self::ROLE_LABELS[$role] ?? $role,
                     'scope_key' => $role,
-                    'games' => $stats['games'],
-                    'wins' => $stats['wins'],
-                    'winrate' => $stats['winrate'],
-                    'deaths_per_10' => $stats['deaths_per_10'],
-                    'dead_time_pct' => $stats['dead_time_pct'],
-                    'vision_per_min' => $stats['vision_per_min'],
-                    'cs_per_min' => $stats['cs_per_min'],
-                    'control_wards_per_game' => $stats['control_wards_per_game'],
-                    'high_death_pct' => $stats['high_death_pct'],
+                    'games' => (int) $stats['games'],
+                    'wins' => (int) $stats['wins'],
+                    'winrate' => (float) $stats['winrate'],
+                    'deaths_per_10' => (float) $stats['deaths_per_10'],
+                    'dead_time_pct' => (float) $stats['dead_time_pct'],
+                    'vision_per_min' => (float) $stats['vision_per_min'],
+                    'cs_per_min' => (float) $stats['cs_per_min'],
+                    'control_wards_per_game' => (float) $stats['control_wards_per_game'],
+                    'high_death_pct' => (float) $stats['high_death_pct'],
                     'reliable' => $reliable,
                     'targets' => $targets,
                     'flags' => $reliable
                         ? [
-                            'deaths' => $stats['deaths_per_10'] > $targets['deaths_per_10'],
-                            'dead_time' => $stats['dead_time_pct'] > $targets['dead_time_pct'],
-                            'vision' => $stats['vision_per_min'] < $targets['vision_per_min'],
-                            'cs' => $stats['cs_per_min'] < $targets['cs_per_min'],
-                            'control_wards' => $stats['control_wards_per_game'] < $targets['control_wards_per_game'],
+                            'deaths' => (float) $stats['deaths_per_10'] > $targets['deaths_per_10'],
+                            'dead_time' => (float) $stats['dead_time_pct'] > $targets['dead_time_pct'],
+                            'vision' => (float) $stats['vision_per_min'] < $targets['vision_per_min'],
+                            'cs' => (float) $stats['cs_per_min'] < $targets['cs_per_min'],
+                            'control_wards' => (float) $stats['control_wards_per_game'] < $targets['control_wards_per_game'],
                         ]
                         : [
                             'deaths' => false,
@@ -269,18 +339,27 @@ class WeaknessService
             ->values();
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return array<int, Check>
+     */
     private function roleChecks(array $role): array
     {
-        return array_values(array_filter([
+        return [
             $this->deathsCheck($role),
             $this->deadTimeCheck($role),
             $this->visionCheck($role),
             $this->csCheck($role),
             $this->controlWardsCheck($role),
             $this->highDeathsCheck($role),
-        ]));
+        ];
     }
 
+    /**
+     * @param  array<string, mixed>  $overall
+     * @param  Collection<int, RoleStats>  $roles
+     * @return array<int, Check>
+     */
     private function overallChecks(array $overall, Collection $roles): array
     {
         $role = [
@@ -307,18 +386,32 @@ class WeaknessService
         return $this->roleChecks($role);
     }
 
+    /**
+     * @param  Collection<int, LolMatch>  $matches
+     * @param  array<string, mixed>  $overall
+     * @return array<int, Check>
+     */
     private function generalChecks(Collection $matches, array $overall): array
     {
-        return array_values(array_filter([
-            $this->unspentCheck($overall),
-            $this->tiltCheck($matches, $overall),
-        ]));
+        $checks = [$this->unspentCheck($overall)];
+
+        $tilt = $this->tiltCheck($matches, $overall);
+
+        if ($tilt !== null) {
+            $checks[] = $tilt;
+        }
+
+        return $checks;
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return Check
+     */
     private function deathsCheck(array $role): array
     {
-        $value = $role['deaths_per_10'];
-        $target = $role['targets']['deaths_per_10'];
+        $value = (float) $role['deaths_per_10'];
+        $target = (float) $role['targets']['deaths_per_10'];
         $subject = $this->subject($role);
 
         return $this->makeCheck([
@@ -343,10 +436,14 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return Check
+     */
     private function deadTimeCheck(array $role): array
     {
-        $value = $role['dead_time_pct'];
-        $target = $role['targets']['dead_time_pct'];
+        $value = (float) $role['dead_time_pct'];
+        $target = (float) $role['targets']['dead_time_pct'];
         $subject = $this->subject($role);
 
         return $this->makeCheck([
@@ -371,10 +468,14 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return Check
+     */
     private function visionCheck(array $role): array
     {
-        $value = $role['vision_per_min'];
-        $target = $role['targets']['vision_per_min'];
+        $value = (float) $role['vision_per_min'];
+        $target = (float) $role['targets']['vision_per_min'];
         $subject = $this->subject($role);
 
         return $this->makeCheck([
@@ -398,10 +499,14 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return Check
+     */
     private function csCheck(array $role): array
     {
-        $value = $role['cs_per_min'];
-        $target = $role['targets']['cs_per_min'];
+        $value = (float) $role['cs_per_min'];
+        $target = (float) $role['targets']['cs_per_min'];
         $subject = $this->subject($role);
 
         return $this->makeCheck([
@@ -427,10 +532,14 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return Check
+     */
     private function controlWardsCheck(array $role): array
     {
-        $value = $role['control_wards_per_game'];
-        $target = $role['targets']['control_wards_per_game'];
+        $value = (float) $role['control_wards_per_game'];
+        $target = (float) $role['targets']['control_wards_per_game'];
         $subject = $this->subject($role);
 
         return $this->makeCheck([
@@ -454,10 +563,14 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     * @return Check
+     */
     private function highDeathsCheck(array $role): array
     {
-        $value = $role['high_death_pct'];
-        $target = $role['targets']['high_death_pct'];
+        $value = (float) $role['high_death_pct'];
+        $target = (float) $role['targets']['high_death_pct'];
         $subject = $this->subject($role);
 
         return $this->makeCheck([
@@ -482,9 +595,13 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  array<string, mixed>  $overall
+     * @return Check
+     */
     private function unspentCheck(array $overall): array
     {
-        $value = $overall['unspent_median'];
+        $value = (int) $overall['unspent_median'];
         $target = 500;
 
         return $this->makeCheck([
@@ -509,6 +626,11 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * @param  Collection<int, LolMatch>  $matches
+     * @param  array<string, mixed>  $overall
+     * @return Check|null
+     */
     private function tiltCheck(Collection $matches, array $overall): ?array
     {
         $timezone = config('diary.timezone');
@@ -564,6 +686,12 @@ class WeaknessService
         ]);
     }
 
+    /**
+     * Normaliza una comprobación: severidad, nivel, estado y consejo.
+     *
+     * @param  array<string, mixed>  $data
+     * @return Check
+     */
     private function makeCheck(array $data): array
     {
         $severity = $this->severity(
@@ -588,29 +716,33 @@ class WeaknessService
             default => 'Objetivo cumplido',
         };
 
+        $scope = is_string($data['scope'] ?? null) ? $data['scope'] : null;
+        $scopeKey = is_string($data['scope_key'] ?? null) ? $data['scope_key'] : null;
+        $metric = (string) $data['metric'];
+
         return [
-            'key' => $data['metric'].'_'.($data['scope_key'] ?? 'general'),
-            'metric' => $data['metric'],
-            'category' => $data['category'],
-            'title' => $data['title'],
-            'scope' => $data['scope'],
-            'scope_key' => $data['scope_key'],
-            'metric_label' => $data['metric_label'],
-            'value' => $data['value'],
-            'display' => $data['display'],
-            'unit' => $data['unit'],
-            'target' => $data['target'],
-            'target_display' => $data['target_display'],
-            'sample' => $data['sample'],
+            'key' => $metric.'_'.($scopeKey ?? 'general'),
+            'metric' => $metric,
+            'category' => (string) $data['category'],
+            'title' => (string) $data['title'],
+            'scope' => $scope,
+            'scope_key' => $scopeKey,
+            'metric_label' => (string) $data['metric_label'],
+            'value' => (float) $data['value'],
+            'display' => (string) $data['display'],
+            'unit' => (string) $data['unit'],
+            'target' => (float) $data['target'],
+            'target_display' => (string) $data['target_display'],
+            'sample' => (int) $data['sample'],
             'severity' => $severity,
             'level' => $level,
             'status' => $status,
-            'higher_is_better' => $data['higher_is_better'],
-            'importance' => $data['importance'],
-            'summary' => $severity === 0 ? $data['summary_ok'] : $data['summary'],
-            'advice' => $severity === 0 ? null : $data['advice'],
+            'higher_is_better' => (bool) $data['higher_is_better'],
+            'importance' => (int) $data['importance'],
+            'summary' => $severity === 0 ? (string) $data['summary_ok'] : (string) $data['summary'],
+            'advice' => $severity === 0 ? null : (string) $data['advice'],
             'headroom' => round(
-                $data['higher_is_better']
+                (bool) $data['higher_is_better']
                     ? (float) $data['value'] / max((float) $data['target'], 0.01)
                     : (float) $data['target'] / max((float) $data['value'], 0.01),
                 3,
@@ -619,8 +751,11 @@ class WeaknessService
     }
 
     /**
-     * One headline per metric. For role-based metrics the worst role wins,
-     * so the page gives advice about a real role instead of a mixed average.
+     * Un titular por métrica. En las métricas por rol gana el peor rol,
+     * para dar consejos sobre un rol real y no sobre una media mezclada.
+     *
+     * @param  array<int, Check>  $candidates
+     * @return array<int, Check>
      */
     private function headlines(array $candidates): array
     {
@@ -648,7 +783,10 @@ class WeaknessService
     }
 
     /**
-     * Best example of each metric that already meets its target.
+     * Mejor ejemplo de cada métrica que ya cumple su objetivo.
+     *
+     * @param  array<int, Check>  $candidates
+     * @return array<int, Check>
      */
     private function strengths(array $candidates): array
     {
@@ -673,6 +811,7 @@ class WeaknessService
         return array_slice($strengths, 0, 3);
     }
 
+    /** @param array<int, Check> $headlines */
     private function score(array $headlines): int
     {
         $weight = array_sum(array_column($headlines, 'importance'));
@@ -689,6 +828,7 @@ class WeaknessService
         return (int) max(0, min(100, round(100 - $penalty)));
     }
 
+    /** @param array<int, Check> $weaknesses */
     private function diagnosis(array $weaknesses, int $score, int $games): string
     {
         if ($weaknesses === []) {
@@ -734,6 +874,7 @@ class WeaknessService
         return (int) min(100, max(0, round(($value - $target) / ($ceiling - $target) * 100)));
     }
 
+    /** @return array<string, float> */
     private function targetsFor(string $role): array
     {
         $targets = [];
@@ -745,6 +886,7 @@ class WeaknessService
         return $targets;
     }
 
+    /** @param Collection<int, RoleStats> $roles */
     private function weightedTarget(string $metric, Collection $roles): float
     {
         $games = $roles->sum('games');
@@ -760,11 +902,15 @@ class WeaknessService
         return round($weighted / $games, 2);
     }
 
+    /** @param array<string, mixed> $role */
     private function subject(array $role): string
     {
         return $role['scope_key'] === null ? 'En general' : 'Como '.$role['label'];
     }
 
+    /**
+     * @param  array<string, mixed>  $role
+     */
     private function scope(array $role): ?string
     {
         return $role['scope_key'] === null ? null : $role['label'];
@@ -786,6 +932,7 @@ class WeaknessService
         return $formatted;
     }
 
+    /** @return array<int, array{label: string, target: string}> */
     private function benchmarks(): array
     {
         return [
@@ -824,6 +971,11 @@ class WeaknessService
         ];
     }
 
+    /**
+     * Partidas de las cuentas del usuario, opcionalmente de una sola cuenta.
+     *
+     * @return Builder<LolMatch>
+     */
     private function baseQuery(User $user, ?int $accountId): Builder
     {
         $query = LolMatch::query()

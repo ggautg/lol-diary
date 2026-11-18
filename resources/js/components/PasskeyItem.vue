@@ -1,7 +1,9 @@
 <script setup>
+/**
+ * Fila de una passkey registrada, con su diálogo de borrado.
+ */
 import { KeyRound, Trash2 } from '@lucide/vue';
 import { ref } from 'vue';
-import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -11,14 +13,14 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+
 const props = defineProps({
-    passkey: {
-        type: Object,
-        required: true,
-    },
+    passkey: { type: Object, required: true },
 });
+
 const emit = defineEmits(['remove']);
 const isDeleting = ref(false);
+
 const handleDelete = () => {
     isDeleting.value = true;
     emit('remove', props.passkey.id, () => {
@@ -28,28 +30,28 @@ const handleDelete = () => {
 </script>
 
 <template>
-    <div class="flex items-center justify-between border-b p-4 last:border-b-0">
+    <div
+        class="flex items-center justify-between gap-4 border-b border-[var(--lol-border-dim)] p-4 last:border-b-0"
+    >
         <div class="flex items-center gap-4">
             <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted"
+                class="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--lol-border-dim)]"
             >
-                <KeyRound class="h-5 w-5 text-muted-foreground" />
+                <KeyRound class="h-5 w-5 opacity-60" />
             </div>
             <div class="space-y-1">
-                <div class="flex items-center gap-2.5">
-                    <p class="font-medium tracking-tight">{{ passkey.name }}</p>
-                    <span
-                        v-if="passkey.authenticator"
-                        class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase ring-1 ring-border ring-inset"
-                    >
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <p class="font-medium tracking-tight">
+                        {{ passkey.name }}
+                    </p>
+                    <span v-if="passkey.authenticator" class="lol-badge">
                         {{ passkey.authenticator }}
                     </span>
                 </div>
-                <p class="text-sm text-muted-foreground">
-                    Added {{ passkey.created_at_diff }}
+                <p class="lol-muted">
+                    Añadida {{ passkey.created_at_diff }}
                     <template v-if="passkey.last_used_at_diff">
-                        <span class="mx-1 text-muted-foreground/50">/</span>
-                        Last used {{ passkey.last_used_at_diff }}
+                        · Último uso {{ passkey.last_used_at_diff }}
                     </template>
                 </p>
             </div>
@@ -57,33 +59,37 @@ const handleDelete = () => {
 
         <Dialog>
             <DialogTrigger as-child>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    class="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                <button
+                    type="button"
+                    class="lol-btn lol-btn--danger"
+                    title="Quitar passkey"
                 >
                     <Trash2 class="h-4 w-4" />
-                    <span class="sr-only">Remove</span>
-                </Button>
+                    <span class="sr-only">Quitar</span>
+                </button>
             </DialogTrigger>
 
             <DialogContent>
-                <DialogTitle>Remove passkey</DialogTitle>
+                <DialogTitle>Quitar passkey</DialogTitle>
                 <DialogDescription>
-                    Are you sure you want to remove the "{{ passkey.name }}"
-                    passkey? You will no longer be able to use it to sign in.
+                    ¿Seguro que quieres quitar la passkey
+                    «{{ passkey.name }}»? Ya no podrás usarla para iniciar
+                    sesión.
                 </DialogDescription>
                 <DialogFooter class="gap-2">
                     <DialogClose as-child>
-                        <Button variant="secondary">Cancel</Button>
+                        <button type="button" class="lol-btn">Cancelar</button>
                     </DialogClose>
-                    <Button
-                        variant="destructive"
+                    <button
+                        type="button"
+                        class="lol-btn lol-btn--danger"
                         :disabled="isDeleting"
                         @click="handleDelete"
                     >
-                        {{ isDeleting ? 'Removing...' : 'Remove passkey' }}
-                    </Button>
+                        {{
+                            isDeleting ? 'Quitando...' : 'Quitar passkey'
+                        }}
+                    </button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

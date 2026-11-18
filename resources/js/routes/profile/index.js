@@ -71,7 +71,7 @@ editForm.head = (options) => ({
 edit.form = editForm;
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
+* @see app/Http/Controllers/Settings/ProfileController.php:32
 * @route '/settings/profile'
 */
 export const update = (options) => ({
@@ -84,7 +84,7 @@ update.definition = {
 };
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
+* @see app/Http/Controllers/Settings/ProfileController.php:32
 * @route '/settings/profile'
 */
 update.url = (options) => {
@@ -92,7 +92,7 @@ update.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
+* @see app/Http/Controllers/Settings/ProfileController.php:32
 * @route '/settings/profile'
 */
 update.patch = (options) => ({
@@ -101,7 +101,7 @@ update.patch = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
+* @see app/Http/Controllers/Settings/ProfileController.php:32
 * @route '/settings/profile'
 */
 const updateForm = (options) => ({
@@ -113,7 +113,7 @@ const updateForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
+* @see app/Http/Controllers/Settings/ProfileController.php:32
 * @route '/settings/profile'
 */
 updateForm.patch = (options) => ({
@@ -126,7 +126,7 @@ updateForm.patch = (options) => ({
 update.form = updateForm;
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:49
+* @see app/Http/Controllers/Settings/ProfileController.php:48
 * @route '/settings/profile'
 */
 export const destroy = (options) => ({
@@ -139,7 +139,7 @@ destroy.definition = {
 };
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:49
+* @see app/Http/Controllers/Settings/ProfileController.php:48
 * @route '/settings/profile'
 */
 destroy.url = (options) => {
@@ -147,7 +147,7 @@ destroy.url = (options) => {
 };
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:49
+* @see app/Http/Controllers/Settings/ProfileController.php:48
 * @route '/settings/profile'
 */
 destroy.delete = (options) => ({
@@ -156,7 +156,7 @@ destroy.delete = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:49
+* @see app/Http/Controllers/Settings/ProfileController.php:48
 * @route '/settings/profile'
 */
 const destroyForm = (options) => ({
@@ -168,7 +168,7 @@ const destroyForm = (options) => ({
 });
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:49
+* @see app/Http/Controllers/Settings/ProfileController.php:48
 * @route '/settings/profile'
 */
 destroyForm.delete = (options) => ({
